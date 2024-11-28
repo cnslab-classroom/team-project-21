@@ -1,6 +1,5 @@
 package org.example;
 
-import org.example.entity.AppleProjectile;
 import org.example.entity.Entity;
 import org.example.entity.Player;
 import org.example.tile.TileManager;
@@ -41,7 +40,6 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void startGameThread(){
         entities.add(new Player(this, keyH));
-        entities.add(new AppleProjectile(this, "down",100,100));
         gameThread = new Thread(this);
         gameThread.start();
     }

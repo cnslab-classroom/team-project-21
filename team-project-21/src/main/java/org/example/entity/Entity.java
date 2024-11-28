@@ -11,15 +11,16 @@ import javax.imageio.ImageIO;
 
 public abstract class Entity {
     public GamePanel gp;
-    public int x,prevX,y,prevY;
+    public int x,prevX,y,prevY,screenX,screenY;
     public int speed;
     public int tickCount = 0;
     public BufferedImage sprite;
     public String direction;
     public int spriteCounter = 0;
     public int spriteNum = 1;
-    public Entity(GamePanel gp){
+    public Entity(GamePanel gp, int x, int y){
         this.gp = gp;
+        locate(x, y);
     }
     public void getImage(String input){
         try{

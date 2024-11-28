@@ -5,22 +5,18 @@ import org.example.KeyHandler;
 
 public class Player extends Entity{
     KeyHandler keyH;
-    boolean shoot = false;
+    boolean shoot;
     int heightDel;
     public Player(GamePanel gp, KeyHandler keyH){
-        super(gp);
+        super(gp, 100, 100);
         this.keyH = keyH;
-        setDefaultValues();
+        speed = 12;
         getImage("/textures/entities/mr_dummy_spawn.png");
         heightDel=0;
         direction = "up";
+        shoot = false;
     }
 
-    public void setDefaultValues(){
-        x = 100;
-        y = 100;
-        speed = 12;
-    }
     public float getHeight(){
         if(heightDel>0){
             return 1f + (float)(heightDel-gp.lerpProgress)/5;
@@ -31,7 +27,7 @@ public class Player extends Entity{
     public void update(){
         super.update();
         if(heightDel>0)heightDel--;
-        if(shoot&& !keyH.spacePressed){
+        if(shoot && !keyH.spacePressed){
             gp.addFreshEntity(new AppleProjectile(gp, direction, x, y));
             heightDel=5;
         }

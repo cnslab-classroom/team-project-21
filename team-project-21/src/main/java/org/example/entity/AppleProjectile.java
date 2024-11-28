@@ -5,7 +5,7 @@ import org.example.GamePanel;
 
 public class AppleProjectile extends Entity{
     public AppleProjectile(GamePanel gp, String direction, int x, int y){
-        super(gp);
+        super(gp, x, y);
         this.direction = direction;
         locate(x,y);
         speed = 24;
