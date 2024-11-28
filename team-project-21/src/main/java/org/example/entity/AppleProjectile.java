@@ -2,23 +2,22 @@ package org.example.entity;
 
 import org.example.GamePanel;
 
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
 public class AppleProjectile extends Entity{
     public AppleProjectile(GamePanel gp, String direction, int x, int y){
         super(gp);
         this.direction = direction;
-        getPlayerImage();
         locate(x,y);
         speed = 24;
+        getImage("/textures/entities/apple.png");
     }
-    public void getPlayerImage(){
-        try{
-            sprite = ImageIO.read(getClass().getResourceAsStream("/textures/entities/apple.png"));
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+    @Override
+    public float getWidth(){
+        return 0.5f;
+    }
+    @Override
+    public float getHeight(){
+        return 0.5f;
     }
     @Override
     public void update(){

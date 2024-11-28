@@ -25,6 +25,7 @@ public class GamePanel extends JPanel implements Runnable {
     //Player player = new Player(this, keyH);
 
     public double lerpProgress;
+    private double logicInterval, renderInterval, nextLogicUpdateTime, nextRenderTime;
     private long previousRenderTime;
     private final int FPS = 60;
     private final int LOGIC_FPS = 20;
@@ -67,10 +68,10 @@ public class GamePanel extends JPanel implements Runnable {
     */
     @Override
     public void run() {
-        double logicInterval = 1000000000.0 / LOGIC_FPS;
-        double renderInterval = 1000000000.0 / FPS;
-        double nextLogicUpdateTime = System.nanoTime();
-        double nextRenderTime = System.nanoTime();
+        logicInterval = 1000000000.0 / LOGIC_FPS;
+        renderInterval = 1000000000.0 / FPS;
+        nextLogicUpdateTime = System.nanoTime();
+        nextRenderTime = System.nanoTime();
 
         previousRenderTime = System.nanoTime();
 

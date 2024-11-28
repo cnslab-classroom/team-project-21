@@ -3,25 +3,17 @@ package org.example.entity;
 import org.example.GamePanel;
 import org.example.KeyHandler;
 
-import javax.imageio.ImageIO;
-import java.io.IOException;
-
 public class Player extends Entity{
     KeyHandler keyH;
     boolean shoot = false;
+    int heightDel;
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp);
         this.keyH = keyH;
         setDefaultValues();
-        getPlayerImage();
-    }
-
-    public void getPlayerImage(){
-        try{
-            sprite = ImageIO.read(getClass().getResourceAsStream("/textures/entities/mr_dummy_spawn.png"));
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        getImage("/textures/entities/mr_dummy_spawn.png");
+        heightDel=0;
+        direction = "up";
     }
 
     public void setDefaultValues(){
@@ -29,11 +21,19 @@ public class Player extends Entity{
         y = 100;
         speed = 12;
     }
+    public float getHeight(){
+        if(heightDel>0){
+            return 1f + (float)(heightDel-gp.lerpProgress)/5;
+        }
+        return 1f;
+    }
     @Override
     public void update(){
         super.update();
+        if(heightDel>0)heightDel--;
         if(shoot&& !keyH.spacePressed){
             gp.addFreshEntity(new AppleProjectile(gp, direction, x, y));
+            heightDel=5;
         }
         shoot = keyH.spacePressed;
         if(keyH.upPressed){
