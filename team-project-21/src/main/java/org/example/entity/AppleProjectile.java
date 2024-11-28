@@ -3,8 +3,6 @@ package org.example.entity;
 import org.example.GamePanel;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class AppleProjectile extends Entity{
@@ -12,9 +10,8 @@ public class AppleProjectile extends Entity{
         super(gp);
         this.direction = direction;
         getPlayerImage();
-        this.x = x;
-        this.y = y;
-        speed = 8;
+        locate(x,y);
+        speed = 24;
     }
     public void getPlayerImage(){
         try{
@@ -34,10 +31,5 @@ public class AppleProjectile extends Entity{
             case "right" -> x+=speed;
             case "left" -> x-=speed;
             }
-    }
-    @Override
-    public void draw(Graphics2D g2){
-        BufferedImage image = sprite;
-        g2.drawImage(image,x,y,gp.tileSize,gp.tileSize,null);
     }
 }

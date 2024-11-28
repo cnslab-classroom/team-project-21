@@ -4,9 +4,6 @@ import org.example.GamePanel;
 import org.example.KeyHandler;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Player extends Entity{
@@ -30,7 +27,7 @@ public class Player extends Entity{
     public void setDefaultValues(){
         x = 100;
         y = 100;
-        speed = 4;
+        speed = 12;
     }
     @Override
     public void update(){
@@ -53,9 +50,11 @@ public class Player extends Entity{
             x-=speed;
         }
     }
+    /*
     @Override
     public void draw(Graphics2D g2){
         BufferedImage image = sprite;
         g2.drawImage(image,x,y,gp.tileSize,gp.tileSize,null);
     }
+    */
 }

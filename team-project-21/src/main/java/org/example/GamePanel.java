@@ -24,7 +24,10 @@ public class GamePanel extends JPanel implements Runnable {
     public CopyOnWriteArrayList<Entity> entities = new CopyOnWriteArrayList<Entity>();
     //Player player = new Player(this, keyH);
 
-    int FPS = 60;
+    public double lerpProgress;
+    private long previousRenderTime;
+    private final int FPS = 60;
+    private final int LOGIC_FPS = 20;
 
     public GamePanel(){
         setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -41,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
-
+    /*
     @Override
     public void run(){
         double drawInterval = 1000000000/FPS;
@@ -61,29 +64,48 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-    /*
-    public void run(){
+    */
+    @Override
+    public void run() {
+        double logicInterval = 1000000000.0 / LOGIC_FPS;
+        double renderInterval = 1000000000.0 / FPS;
+        double nextLogicUpdateTime = System.nanoTime();
+        double nextRenderTime = System.nanoTime();
 
-        double drawInterval = 1000000000/FPS;
-        double nextDrawTime = System.nanoTime() + drawInterval;
+        previousRenderTime = System.nanoTime();
 
-        while(gameThread != null){
-            update();
-            repaint();
-            try {
-                double remainingTime = nextDrawTime - System.nanoTime();
-                remainingTime = remainingTime / 1000000;
-                if (remainingTime < 0) remainingTime = 0;
+        while (gameThread != null) {
+            long currentTime = System.nanoTime();
 
-                Thread.sleep((long) remainingTime);
+            if (currentTime >= nextLogicUpdateTime) {
+                update();
+                nextLogicUpdateTime += logicInterval;
+            }
 
-                nextDrawTime += drawInterval;
-            } catch(InterruptedException e){
-                e.printStackTrace();
+            if (currentTime >= nextRenderTime) {
+                lerpProgress = calculateLerpProgress(currentTime, nextLogicUpdateTime, logicInterval);
+                repaint();
+                previousRenderTime = currentTime;
+                nextRenderTime += renderInterval;
+            }
+
+            long sleepTime = Math.min((long) (nextLogicUpdateTime - currentTime), (long) (nextRenderTime - currentTime)) / 1000000;
+            if (sleepTime > 0) {
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
-    */
+
+    private double calculateLerpProgress(long currentTime, double nextLogicUpdateTime, double logicInterval) {
+        double elapsedTime = nextLogicUpdateTime - currentTime;
+        double progress = 1.0 - Math.min(1.0, Math.max(0.0, elapsedTime / logicInterval));
+        return progress;
+    }
+
     public void update(){
         //player.update();
 
