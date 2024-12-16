@@ -45,7 +45,7 @@ public class GunMan extends LivingEntity{
         }
     }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(getWidth()*gp.tileSize*20), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, 0, (int)(15*gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
     }
     public int getCost(){
         return 10;

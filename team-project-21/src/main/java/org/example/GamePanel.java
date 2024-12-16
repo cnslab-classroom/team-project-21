@@ -1,9 +1,12 @@
 package org.example;
 
+import org.example.entity.BUnit1;
+import org.example.entity.BUnit2;
 import org.example.entity.Dummy;
 import org.example.entity.Entity;
 import org.example.entity.GunMan;
 import org.example.entity.HitBox;
+import org.example.entity.MUnit2;
 import org.example.entity.Player;
 import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
@@ -96,9 +99,9 @@ public class GamePanel extends JPanel implements Runnable {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
                 if(keyH.upPressed){
-                    entities.add(new GunMan(this, 100, 100, "player"));
+                    entities.add(new MUnit2(this, 100, 100, "player"));
                 }else if(keyH.downPressed){
-                    entities.add(new GunMan(this, 700, 100, "enemy"));
+                    entities.add(new BUnit2(this, 1700, 100, "enemy"));
                 }else if(keyH.rightPressed){
                     actualX-=speed;
                 }else if(keyH.leftPressed){
