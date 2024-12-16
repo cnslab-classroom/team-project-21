@@ -3,12 +3,12 @@ package org.example.entity;
 import org.example.GamePanel;
 import org.example.KeyHandler;
 
-public class Player extends Entity{
+public class Player extends LivingEntity{
     KeyHandler keyH;
     boolean shoot;
     int heightDel;
     public Player(GamePanel gp, KeyHandler keyH){
-        super(gp, 100, 100);
+        super(gp, 100, 100, "player");
         this.keyH = keyH;
         getImage("/textures/entities/mr_dummy_spawn.png");
         heightDel=0;
@@ -27,7 +27,7 @@ public class Player extends Entity{
         super.update();
         if(heightDel>0)heightDel--;
         if(shoot && !keyH.spacePressed){
-            gp.addFreshEntity(new AppleProjectile(gp, direction, x, y - (int)(getHeight() * gp.tileSize)));
+            gp.addFreshEntity(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 24));
             heightDel=5;
         }
         shoot = keyH.spacePressed;

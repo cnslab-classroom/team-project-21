@@ -3,30 +3,13 @@ package org.example.entity;
 import org.example.GamePanel;
 
 
-public class AppleProjectile extends Entity{
-    public int speed;
-    public AppleProjectile(GamePanel gp, String direction, int x, int y){
-        super(gp, x, y);
-        this.direction = direction;
-        locate(x,y);
-        speed = 24;
+public class AppleProjectile extends Projectile{
+    public AppleProjectile(GamePanel gp, int x, int y, LivingEntity Owner, int speed){
+        super(gp, x, y, Owner, speed);
+        this.speed = speed;
         getImage("/textures/entities/apple.png");
-        switch (direction){
-            case "up":
-                ySpeed = -speed;
-                break;
-            case "down":
-                ySpeed = speed;
-                break;
-            case "right":
-                xSpeed = speed;
-                ySpeed = -speed/2;
-                break;
-            case "left":
-                xSpeed = -speed;
-                ySpeed = -speed/2;
-                break;
-        }
+        xSpeed = speed;
+        ySpeed = -speed/2;
     }
     @Override
     public float getWidth(){
@@ -40,6 +23,5 @@ public class AppleProjectile extends Entity{
     public void update(){
         super.update();
         if(tickCount>20) gp.remove(this);
-        
     }
 }

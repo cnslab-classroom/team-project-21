@@ -1,12 +1,18 @@
 package org.example;
 
 import org.example.entity.Entity;
+import org.example.entity.HitBox;
 import org.example.entity.Player;
 import org.example.tile.TileManager;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
     public final int originalTileSize = 16;
@@ -115,7 +121,20 @@ public class GamePanel extends JPanel implements Runnable {
         double progress = 1.0 - Math.min(1.0, Math.max(0.0, elapsedTime / logicInterval));
         return progress;
     }
+    public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range, Comparator<Entity> comparator) {
+        // 필터링된 엔티티 리스트 반환
+        return entities.stream()
+                .filter(entity -> clazz.isInstance(entity)) // 주어진 클래스 타입에 해당하는 엔티티 필터링
+                .filter(entity -> entity.getHitbox().intersects(range)) // 범위 내에 있는지 확인
+                .map(clazz::cast) // 타입 캐스팅
+                .sorted(comparator) // 주어진 Comparator에 따라 정렬
+                .collect(Collectors.toList());
+    }
 
+    public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range) {
+        // 기본적으로 거리 기준으로 정렬된 엔티티 반환
+        return getEntitiesOfClass(clazz, range, Comparator.comparingDouble(e -> e.getHitbox().distanceTo(range)));
+    }
     public void update(){
         //player.update();
 
