@@ -2,12 +2,13 @@ package org.example.entity;
 
 import org.example.GamePanel;
 
-public class Projectile extends Entity{
-    Entity Owner;
-    
-    public Projectile(GamePanel gp, int x, int y, Entity Owner){
+public abstract class Projectile extends Entity{
+    public Entity Owner;
+    public int speed;
+    public Projectile(GamePanel gp, int x, int y, Entity Owner, int speed){
         super(gp,x,y);
         this.Owner = Owner;
+        this.speed = speed;
     }
 
     public Entity getOwner() {

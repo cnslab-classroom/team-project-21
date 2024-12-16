@@ -28,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
     private long previousRenderTime;
     private final int FPS = 60;
     private final int LOGIC_FPS = 20;
+    public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
     public GamePanel(){
         setPreferredSize(new Dimension(screenWidth,screenHeight));
@@ -64,6 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     */
+    int speed = 10;
     @Override
     public void run() {
         logicInterval = 1000000000.0 / LOGIC_FPS;
@@ -75,9 +77,18 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
             long currentTime = System.nanoTime();
-
+            prevActualX = actualX; prevActualY = actualY;
             if (currentTime >= nextLogicUpdateTime) {
                 update();
+                if(keyH.upPressed){
+                    actualY+=speed;
+                }else if(keyH.downPressed){
+                    actualY-=speed;
+                }else if(keyH.rightPressed){
+                    actualX-=speed;
+                }else if(keyH.leftPressed){
+                    actualX+=speed;
+                }
                 nextLogicUpdateTime += logicInterval;
             }
 

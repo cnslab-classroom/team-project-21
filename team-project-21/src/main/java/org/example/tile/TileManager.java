@@ -1,6 +1,7 @@
 package org.example.tile;
 
 import org.example.GamePanel;
+import org.example.utils.Mth;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -64,7 +65,10 @@ public class TileManager {
         while(col<gp.maxScreenCol&&row<gp.maxScreenRow){
 
             int tileNum = mapTileNum[col][row];
-            g2.drawImage(tiles[tileNum].image,x,y,gp.tileSize,gp.tileSize,null);
+            g2.drawImage(tiles[tileNum].image,
+            x + Mth.lerp(gp.prevActualX,gp.actualX,gp.lerpProgress),
+            y + Mth.lerp(gp.prevActualY,gp.actualY,gp.lerpProgress)
+            ,gp.tileSize,gp.tileSize,null);
             col++;
             x+=gp.tileSize;
             if(col==gp.maxScreenCol){

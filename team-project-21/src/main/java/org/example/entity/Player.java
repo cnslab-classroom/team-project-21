@@ -10,10 +10,9 @@ public class Player extends Entity{
     public Player(GamePanel gp, KeyHandler keyH){
         super(gp, 100, 100);
         this.keyH = keyH;
-        speed = 12;
         getImage("/textures/entities/mr_dummy_spawn.png");
         heightDel=0;
-        direction = "up";
+        direction = "right";
         shoot = false;
     }
 
@@ -28,10 +27,11 @@ public class Player extends Entity{
         super.update();
         if(heightDel>0)heightDel--;
         if(shoot && !keyH.spacePressed){
-            gp.addFreshEntity(new AppleProjectile(gp, direction, x, y));
+            gp.addFreshEntity(new AppleProjectile(gp, direction, x, y - (int)(getHeight() * gp.tileSize)));
             heightDel=5;
         }
         shoot = keyH.spacePressed;
+        /*
         if(keyH.upPressed){
             direction = "up";
             y-=speed;
@@ -45,6 +45,7 @@ public class Player extends Entity{
             direction = "left";
             x-=speed;
         }
+        */
     }
     /*
     @Override
