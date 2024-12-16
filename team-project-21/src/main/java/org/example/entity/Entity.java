@@ -48,11 +48,21 @@ public abstract class Entity {
         this.hitbox = hitbox;
     }
     
-    public void getImage(String input){
+    public void setImage(String input){
         try{
             sprite = ImageIO.read(getClass().getResourceAsStream(input));
         }catch(IOException e){
             e.printStackTrace();
+        }
+    }
+    public BufferedImage getImage(String input) {
+        try {
+            BufferedImage image = ImageIO.read(getClass().getResourceAsStream(input));
+            return image;
+        } catch (IOException e) {
+            System.err.println("이미지 로딩 중 오류 발생: " + input);
+            e.printStackTrace();
+            return null;
         }
     }
     public void update(){
@@ -68,7 +78,7 @@ public abstract class Entity {
     };
 
     int getGravitySpeed(){
-        return 3;
+        return 6;
     }
 
     //prev 좌표까지 한 번에 바꿔서 해당 엔티티가 순간이동을 한 것처럼 보여줌
@@ -88,13 +98,13 @@ public abstract class Entity {
         this.x += vectorX;
         this.y += vectorY;
         if(isOnGround()){
-            y = 500;
+            y = 400;
             ySpeed = 0;
             xSpeed *= 0.5;
         }
     }
     public boolean isOnGround(){
-        return y>=500;
+        return y>=400;
     }
     
     

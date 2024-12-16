@@ -2,16 +2,16 @@ package org.example.entity;
 
 import org.example.GamePanel;
 import org.example.KeyHandler;
+import org.example.entity.projectiles.AppleProjectile;
 
 public class Player extends LivingEntity{
     KeyHandler keyH;
     boolean shoot;
     int heightDel;
-    public Player(GamePanel gp, KeyHandler keyH, String direction){
+    public Player(GamePanel gp, KeyHandler keyH){
         super(gp, 100, 100, "player");
         this.keyH = keyH;
-        this.direction = direction;
-        getImage("/textures/entities/shield_man/shield_man_idle.png");
+        setImage("/textures/entities/shield_man/shield_man_idle.png");
         heightDel=0;
         shoot = false;
     }
@@ -29,7 +29,8 @@ public class Player extends LivingEntity{
         super.update();
         if(heightDel>0)heightDel--;
         if(shoot && !keyH.spacePressed){
-            gp.addFreshEntity(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 32, 40));
+            for(int i=0;i<10;i++)
+            gp.addFreshEntityP(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 20+i, 20+i));
             heightDel=5;
         }
         shoot = keyH.spacePressed;

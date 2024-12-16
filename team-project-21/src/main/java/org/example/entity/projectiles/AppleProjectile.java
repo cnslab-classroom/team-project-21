@@ -1,8 +1,9 @@
-package org.example.entity;
+package org.example.entity.projectiles;
 
 import java.util.List;
 
 import org.example.GamePanel;
+import org.example.entity.LivingEntity;
 
 
 public class AppleProjectile extends Projectile{
@@ -10,18 +11,18 @@ public class AppleProjectile extends Projectile{
     public AppleProjectile(GamePanel gp, int x, int y, LivingEntity Owner, int speed, int deathTicks){
         super(gp, x, y, Owner, speed);
         this.speed = speed;
-        getImage("/textures/entities/apple.png");
+        setImage("/textures/entities/apple.png");
         xSpeed = direction=="right"? speed:-speed;
-        ySpeed = -speed/2;
+        ySpeed = -speed/3;
         this.deathTicks = deathTicks;
     }
     @Override
     public float getWidth(){
-        return (tickCount<=deathTicks-3) ? 0.5f : 1;
+        return (tickCount<=deathTicks-1) ? 0.5f : 1;
     }
     @Override
     public float getHeight(){
-        return (tickCount<=deathTicks-3) ? 0.5f : 1;
+        return (tickCount<=deathTicks-1) ? 0.5f : 1;
     }
     @Override
     public void update(){
@@ -33,15 +34,16 @@ public class AppleProjectile extends Projectile{
                     entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-5);
                     entityiterator.xSpeed += direction=="right"?10:-10;
                     entityiterator.ySpeed -= 5;
-                    deathTicks = tickCount+2;
+                    deathTicks = tickCount+1;
+                    isHit = true;
                     break;
                 }
             }
         }
-        if(tickCount>deathTicks-3) {
+        if(tickCount>deathTicks-1) {
             isHit = true;
-            getImage("/textures/entities/apple_explode.png");
+            setImage("/textures/entities/apple_explode.png");
         }
-        if(tickCount>deathTicks) gp.remove(this);
+        if(tickCount>deathTicks) gp.removeP(this);
     }
 }

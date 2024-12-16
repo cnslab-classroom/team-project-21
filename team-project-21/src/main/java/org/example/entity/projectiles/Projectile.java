@@ -1,6 +1,8 @@
-package org.example.entity;
+package org.example.entity.projectiles;
 
 import org.example.GamePanel;
+import org.example.entity.Entity;
+import org.example.entity.LivingEntity;
 
 public abstract class Projectile extends Entity{
     public LivingEntity Owner;

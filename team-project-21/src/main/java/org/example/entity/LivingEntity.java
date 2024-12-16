@@ -6,43 +6,78 @@ import org.example.GamePanel;
 import org.example.utils.Mth;
 
 import java.awt.geom.AffineTransform;
+import java.util.List;
 
 public abstract class LivingEntity extends Entity{
-    private int currentHealth, attackDamage, detectRange, deathTicks;
-    protected boolean defaultDeathAnimation;
+    private int currentHealth, attackDamage, deathTicks;
+    protected boolean defaultDeathAnimation, targetFound, moving;
     private String team;
+    public byte state;
+    public HitBox detectRange;
     
     public LivingEntity(GamePanel gp, int x, int y, String team){
         super(gp, x, y);
         this.team = team;
+        this.state = 1;
         defaultDeathAnimation = true;
         if(team=="player")
             direction = "right";
         else
             direction = "left";
         setCurrentHealth(getMaxHealth());
+        detectRange = createDetectRange();
+    }
+
+    public HitBox createDetectRange() {
+        return new HitBox(x, y, 0, (int)(getWidth()*gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+    }
+
+    public int getCost(){
+        return 0;
+    }
+    public void updateDetectRange() {
+        // 히트박스를 현재 위치로 동기화
+        int err = direction == "right" ? (int)(getWidth()*gp.tileSize)/2 : -(int)(getWidth()*gp.tileSize)/2;
+        detectRange.setX(x + err);
+        detectRange.setY(y);
     }
     @Override
     public void update(){
         super.update();
-        if(isAlive())
+        if(isAlive()){
             travel();
+            if(tickCount%10==5){
+                updateDetectRange();
+                List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
+                targetFound = false;
+                for(LivingEntity entityiterator : _entfound){
+                    if(this!=entityiterator&&this.getTeam()!=entityiterator.getTeam()){
+                        targetFound = true;
+                        state = 2;
+                        break;
+                    }
+                }
+                if(!targetFound) { state = 1; }
+            }
+        }
         else{
             deathTicks++;
+            state = 0;
             if(deathTicks > 10)
                 gp.remove(this);
         }
     }
     public int getMovementSpeed(){
-        return 3;
+        return 6;
     }
     public void travel(){
-        if(isOnGround())
+        if(state == 1 && isOnGround()){
             if (direction=="right") {
                 xSpeed += getMovementSpeed(); // Move right
             } else if (direction=="left") {
                 xSpeed += -getMovementSpeed(); // Move left
             }
+        }
     }
     public String getTeam() {
         return team;
@@ -70,12 +105,6 @@ public abstract class LivingEntity extends Entity{
     }
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = attackDamage;
-    }
-    public int getDetectRange() {
-        return detectRange;
-    }
-    public void setDetectRange(int detectRange) {
-        this.detectRange = detectRange;
     }
     @Override
     public void drawMethod(Graphics2D g2){

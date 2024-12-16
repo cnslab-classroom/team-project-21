@@ -2,16 +2,21 @@ package org.example;
 
 import org.example.entity.Dummy;
 import org.example.entity.Entity;
+import org.example.entity.GunMan;
 import org.example.entity.HitBox;
 import org.example.entity.Player;
+import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
+import org.example.utils.Mth;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -28,13 +33,15 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
     public CopyOnWriteArrayList<Entity> entities = new CopyOnWriteArrayList<Entity>();
+    public CopyOnWriteArrayList<Entity> projectile_entities = new CopyOnWriteArrayList<Entity>();
+
     //Player player = new Player(this, keyH);
 
     public double lerpProgress;
     private double logicInterval, renderInterval, nextLogicUpdateTime, nextRenderTime;
     private long previousRenderTime;
     private final int FPS = 60;
-    private final int LOGIC_FPS = 20;
+    private final int LOGIC_FPS = 15;
     public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
     public GamePanel(){
@@ -47,8 +54,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread(){
-        entities.add(new Player(this, keyH, "right"));
-        entities.add(new Dummy(this, 700, 100, "left"));
+        entities.add(new Player(this, keyH));
+        entities.add(new Dummy(this, 700, 100));
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -73,7 +80,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     */
-    int speed = 10;
+    int speed = 30;
     @Override
     public void run() {
         logicInterval = 1000000000.0 / LOGIC_FPS;
@@ -88,10 +95,10 @@ public class GamePanel extends JPanel implements Runnable {
             if (currentTime >= nextLogicUpdateTime) {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
-                /*if(keyH.upPressed){
-                    actualY+=speed;
-                }else*/ if(keyH.downPressed){
-                    entities.add(new Dummy(this, 700, 100, "left"));
+                if(keyH.upPressed){
+                    entities.add(new GunMan(this, 100, 100, "player"));
+                }else if(keyH.downPressed){
+                    entities.add(new GunMan(this, 700, 100, "enemy"));
                 }else if(keyH.rightPressed){
                     actualX-=speed;
                 }else if(keyH.leftPressed){
@@ -143,21 +150,44 @@ public class GamePanel extends JPanel implements Runnable {
         for(Entity e:entities){
             e.update();
         }
+        for(Entity e:projectile_entities){
+            e.update();
+        }
 
     }
     public void addFreshEntity(Entity entity){
         entities.add(entity);
     }
+    public void addFreshEntityP(Projectile entity){
+        projectile_entities.add(entity);
+    }
     public void remove(Entity entity){
         entities.remove(entity);
     }
+    public void removeP(Projectile entity){
+        projectile_entities.remove(entity);
+    }
+
+    public BufferedImage getImage(String input) {
+        try {
+            BufferedImage image = ImageIO.read(getClass().getResourceAsStream(input));
+            return image;
+        } catch (IOException e) {
+            System.err.println("이미지 로딩 중 오류 발생: " + input);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        tileM.draw(g2);
         //player.draw(g2);
-
+        g2.drawImage(getImage("/textures/tiles/background.png"),0,-96,screenWidth,screenHeight,null);
         for(Entity e:entities){
+            e.draw(g2);
+        }
+        for(Entity e:projectile_entities){
             e.draw(g2);
         }
 
