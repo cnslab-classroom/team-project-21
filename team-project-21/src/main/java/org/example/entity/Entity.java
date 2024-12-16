@@ -27,11 +27,12 @@ public abstract class Entity {
         noCulling = false;
         hasGravity = true;
         xSpeed = ySpeed = 0;
+        direction = "right";
         locate(x, y);
         this.hitbox = createHitbox();
     }
     public HitBox createHitbox() {
-        return new HitBox(x, y, 0, getWidth(), getHeight(), getWidth());
+        return new HitBox(x, y, 0, getWidth()*gp.tileSize, getHeight()*gp.tileSize, getWidth()*gp.tileSize);
     }
     public HitBox getHitbox() {
         return hitbox;
@@ -93,7 +94,7 @@ public abstract class Entity {
         }
     }
     public boolean isOnGround(){
-        return y>500;
+        return y>=500;
     }
     
     
@@ -106,22 +107,28 @@ public abstract class Entity {
     public float getHeight(){
         return 1;
     }
-
-    public void draw(Graphics2D g2){
-        boolean canRender= true;
-        if(!noCulling &&
-        (gp.actualX + x + getWidth() * gp.tileSize/2 < 0 ||
+    public boolean canRender(){
+        return noCulling || !(gp.actualX + x + getWidth() * gp.tileSize/2 < 0 ||
         gp.actualX + x - getWidth() * gp.tileSize > gp.screenWidth ||
         gp.actualY + y + getHeight() * gp.tileSize < 0 ||  // 위쪽 화면 바깥
-        gp.actualY + y - getHeight() * gp.tileSize > gp.screenHeight)){
-            canRender = false;
+        gp.actualY + y - getHeight() * gp.tileSize > gp.screenHeight);
+    }
+    public void draw(Graphics2D g2){
+        if(canRender()){
+            drawMethod(g2);
         }
-        if(canRender){
+    }
+    protected void drawMethod(Graphics2D g2){
         BufferedImage image = sprite;
-        g2.drawImage(image,
-        Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) - (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
-        ,Mth.lerp(gp.prevActualY+prevY,gp.actualY+y,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
-        ,(int)(getWidth()*gp.tileSize),(int)(getHeight()*gp.tileSize),null);
-        }
+        if(direction == "right")
+            g2.drawImage(image,
+            Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) - (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
+            ,Mth.lerp(gp.prevActualY+prevY,gp.actualY+y,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
+            ,(int)(getWidth()*gp.tileSize),(int)(getHeight()*gp.tileSize),null);
+        else if(direction == "left")
+            g2.drawImage(image,
+            Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) + (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
+            ,Mth.lerp(gp.prevActualY+prevY,gp.actualY+y,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
+            ,-(int)(getWidth()*gp.tileSize),(int)(getHeight()*gp.tileSize),null);
     }
 }

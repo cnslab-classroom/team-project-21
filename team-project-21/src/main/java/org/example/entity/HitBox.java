@@ -13,6 +13,13 @@ public class HitBox {
         this.depth = depth;
     }
 
+    public HitBox expand(int x, int y, int z){
+        return new HitBox(this.x, this.y, this.z, width + x, height+ y, depth + z);
+    }
+    public HitBox expand(int num){
+        return expand(num,num,num);
+    }
+
     // Getter and Setter
     public float getX() { return x; }
     public void setX(float x) { this.x = x; }

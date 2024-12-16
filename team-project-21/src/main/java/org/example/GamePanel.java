@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.entity.Dummy;
 import org.example.entity.Entity;
 import org.example.entity.HitBox;
 import org.example.entity.Player;
@@ -46,7 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread(){
-        entities.add(new Player(this, keyH));
+        entities.add(new Player(this, keyH, "right"));
+        entities.add(new Dummy(this, 700, 100, "left"));
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -83,13 +85,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
             long currentTime = System.nanoTime();
-            prevActualX = actualX; prevActualY = actualY;
             if (currentTime >= nextLogicUpdateTime) {
+                prevActualX = actualX; prevActualY = actualY;
                 update();
-                if(keyH.upPressed){
+                /*if(keyH.upPressed){
                     actualY+=speed;
-                }else if(keyH.downPressed){
-                    actualY-=speed;
+                }else*/ if(keyH.downPressed){
+                    entities.add(new Dummy(this, 700, 100, "left"));
                 }else if(keyH.rightPressed){
                     actualX-=speed;
                 }else if(keyH.leftPressed){
@@ -121,7 +123,7 @@ public class GamePanel extends JPanel implements Runnable {
         double progress = 1.0 - Math.min(1.0, Math.max(0.0, elapsedTime / logicInterval));
         return progress;
     }
-    public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range, Comparator<Entity> comparator) {
+    public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range, Comparator<T> comparator) {
         // 필터링된 엔티티 리스트 반환
         return entities.stream()
                 .filter(entity -> clazz.isInstance(entity)) // 주어진 클래스 타입에 해당하는 엔티티 필터링

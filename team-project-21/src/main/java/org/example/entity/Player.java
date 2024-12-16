@@ -7,15 +7,17 @@ public class Player extends LivingEntity{
     KeyHandler keyH;
     boolean shoot;
     int heightDel;
-    public Player(GamePanel gp, KeyHandler keyH){
+    public Player(GamePanel gp, KeyHandler keyH, String direction){
         super(gp, 100, 100, "player");
         this.keyH = keyH;
-        getImage("/textures/entities/mr_dummy_spawn.png");
+        this.direction = direction;
+        getImage("/textures/entities/shield_man/shield_man_idle.png");
         heightDel=0;
-        direction = "right";
         shoot = false;
     }
-
+    public int getMovementSpeed(){
+        return 0;
+    }
     public float getHeight(){
         if(heightDel>0){
             return 1f + (float)(heightDel-gp.lerpProgress)/5;
@@ -27,7 +29,7 @@ public class Player extends LivingEntity{
         super.update();
         if(heightDel>0)heightDel--;
         if(shoot && !keyH.spacePressed){
-            gp.addFreshEntity(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 24));
+            gp.addFreshEntity(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 32, 40));
             heightDel=5;
         }
         shoot = keyH.spacePressed;
