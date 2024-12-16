@@ -37,7 +37,7 @@ public abstract class LivingEntity extends Entity{
     }
     public void updateDetectRange() {
         // 히트박스를 현재 위치로 동기화
-        int err = direction == "right" ? (int)(getWidth()*gp.tileSize)/2 : -(int)(getWidth()*gp.tileSize)/2;
+        int err = direction == "right" ? (int)(getWidth()*gp.tileSize)*2 : -(int)(getWidth()*gp.tileSize)*2;
         detectRange.setX(x + err);
         detectRange.setY(y);
     }

@@ -3,7 +3,7 @@ package org.example.entity;
 import java.awt.image.BufferedImage;
 
 import org.example.GamePanel;
-import org.example.entity.projectiles.AppleProjectile;
+import org.example.entity.projectiles.Bullet;
 
 public class GunMan extends LivingEntity{
     int attackTicks;
@@ -32,10 +32,15 @@ public class GunMan extends LivingEntity{
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%2;
-                sprite = attackSprites[ticks];
-                if(ticks==0)
-                    gp.addFreshEntityP(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 60, 20));
+                int ticks = (tickCount-attackTicks)%4;
+                
+                if(ticks<1){
+                    sprite = attackSprites[ticks];
+                    if(ticks == 0)
+                    gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 60, 10));
+                }else{
+                    sprite = moveSprites[0];
+                }
             }
         }
     }
