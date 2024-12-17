@@ -2,6 +2,7 @@ package org.example;
 
 import org.example.entity.BUnit1;
 import org.example.entity.BUnit2;
+import org.example.entity.CommandCenter;
 import org.example.entity.Dummy;
 import org.example.entity.Entity;
 import org.example.entity.GunMan;
@@ -65,7 +66,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread(){
-        entities.add(new Player(this, keyH));
+        entities.add(new CommandCenter(this, 100, 100, "player"));
+        entities.add(new CommandCenter(this, 1700, 100, "enemy"));
         entities.add(new Dummy(this, 700, 100));
         gameThread = new Thread(this);
         gameThread.start();

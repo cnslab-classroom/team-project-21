@@ -46,8 +46,13 @@ public class HitBox {
     public float getMinY() { return y; }
     public float getMaxY() { return y + height; }
 
+    
+    public float getMinZ() { return z; }
+    public float getMaxZ() { return z + depth; }
+    /*
     public float getMinZ() { return z - depth / 2; }
     public float getMaxZ() { return z + depth / 2; }
+    */
     public double distanceTo(HitBox other) {
         // 두 히트박스 중심 간의 거리 계산
         float dx = this.x - other.x;

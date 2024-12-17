@@ -165,7 +165,7 @@ public abstract class Entity {
 
         // z 값을 반영한 좌표 계산
         int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
-        int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight;
+        int drawY = (int) Mth.lerp(gp.prevActualY + prevY + (int)(prevZ * scale), gp.actualY + y + (int)(z * scale), gp.lerpProgress) - scaledHeight;
 
         // 이미지 그리기
         if (direction.equals("right")) {
