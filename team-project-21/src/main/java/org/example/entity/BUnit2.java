@@ -155,7 +155,7 @@ public class BUnit2 extends LivingEntity{
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(24 * gp.tileSize), getHeight()*gp.tileSize, 10*gp.tileSize);
     }
-    public int getCost(){
+    public static int getCost(){
         return 450;
     }
     public int getMaxHealth(){

@@ -62,6 +62,15 @@ public class GamePanel extends JPanel implements Runnable {
     private final int LOGIC_FPS = 15;
     public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
+    private int money = 100;
+    private int get_money = 1;
+    private double money_interval = logicInterval * 4;
+    private double next_money = System.nanoTime() + money_interval;
+
+    private int interfaceX;
+    private int interfaceY;
+    Font UI;
+
     public GamePanel(){
         setPreferredSize(new Dimension(screenWidth,screenHeight));
         setBackground(Color.BLACK);
@@ -69,6 +78,8 @@ public class GamePanel extends JPanel implements Runnable {
         addKeyListener(keyH);
         setFocusable(true);
         loadSoundsFromFolder("/sounds/sf");
+
+        UI = new Font("Arial", Font.PLAIN, 20);
     }
 
     public void startGameThread(){
@@ -169,19 +180,28 @@ public class GamePanel extends JPanel implements Runnable {
 
         previousRenderTime = System.nanoTime();
 
+        money = 100;
+        get_money = 1;
+        money_interval = logicInterval * 4;
+        next_money = System.nanoTime() + money_interval;
+
         while (gameThread != null) {
             long currentTime = System.nanoTime();
             if (currentTime >= nextLogicUpdateTime) {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
-                if(keyH.isNumberKeyJustPressed(1)){
+                if(keyH.isNumberKeyJustPressed(1) && money >= SUnit2.getCost()){
                     entities.add(new SUnit2(this, 100, 400, "player"));
-                } else if(keyH.isNumberKeyJustPressed(2)){
+                    money -= SUnit2.getCost();
+                } else if(keyH.isNumberKeyJustPressed(2) && money >= MUnit2.getCost()){
                     entities.add(new MUnit2(this, 100, 400, "player"));
-                } else if(keyH.isNumberKeyJustPressed(3)){
+                    money -= MUnit2.getCost();
+                } else if(keyH.isNumberKeyJustPressed(3) && money >= BUnit1.getCost()){
                     entities.add(new BUnit1(this, 100, 400, "player"));
-                } else if(keyH.isNumberKeyJustPressed(4)){
+                    money -= BUnit1.getCost();
+                } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit2.getCost()){
                     entities.add(new BUnit2(this, 100, 400, "player"));
+                    money -= BUnit2.getCost();
                 } else if(keyH.isNumberKeyJustPressed(5)){
                     entities.add(new GunMan(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(6)){
@@ -201,11 +221,18 @@ public class GamePanel extends JPanel implements Runnable {
                 }else if(keyH.leftPressed){
                     actualX+=speed;
                 }
+
+                if(currentTime >= next_money){
+                    money += get_money;
+                    next_money += money_interval;
+                }
+
                 nextLogicUpdateTime += logicInterval;
             }
 
             if (currentTime >= nextRenderTime) {
                 lerpProgress = calculateLerpProgress(currentTime, nextLogicUpdateTime, logicInterval);
+
                 repaint();
                 previousRenderTime = currentTime;
                 nextRenderTime += renderInterval;
@@ -290,6 +317,13 @@ public class GamePanel extends JPanel implements Runnable {
         projectile_entities.stream()
         .sorted(Comparator.comparingInt(Entity::getZ))
         .forEach(e -> e.draw(g2));
+
+        g2.setFont(UI);
+        g2.setColor(Color.white);
+        interfaceX = 0;
+        interfaceY = screenHeight - 60;
+
+        g2.drawString("Money = " + money, interfaceX, interfaceY);
 
         g2.dispose();
     }

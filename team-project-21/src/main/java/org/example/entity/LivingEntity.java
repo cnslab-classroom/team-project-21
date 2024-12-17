@@ -48,7 +48,7 @@ public abstract class LivingEntity extends Entity{
         return new HitBox(x, y, z, (int)(getWidth() * gp.tileSize * 2), (int)(getHeight() * gp.tileSize), (int)(getHeight() * gp.tileSize));
     }
 
-    public int getCost(){
+    public static int getCost(){
         return 0;
     }
     public void updateDetectRange() {
