@@ -33,7 +33,7 @@ public class GunMan extends LivingEntity{
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%20; // 0.33초
+                int ticks = (tickCount-attackTicks)%40; // 0.33초
                 
                 if(ticks<6){
                     int t2 = ticks%2;
