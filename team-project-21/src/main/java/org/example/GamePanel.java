@@ -62,10 +62,10 @@ public class GamePanel extends JPanel implements Runnable {
     private final int LOGIC_FPS = 15;
     public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
-    private int money = 100;
-    private int get_money = 1;
-    private double money_interval = logicInterval * 4;
-    private double next_money = System.nanoTime() + money_interval;
+    private int money;
+    private int get_money;
+    private double money_interval;
+    private double next_money;
 
     private int interfaceX;
     private int interfaceY;
@@ -181,7 +181,7 @@ public class GamePanel extends JPanel implements Runnable {
         previousRenderTime = System.nanoTime();
 
         money = 100;
-        get_money = 1;
+        get_money = 10;
         money_interval = logicInterval * 4;
         next_money = System.nanoTime() + money_interval;
 
@@ -190,19 +190,22 @@ public class GamePanel extends JPanel implements Runnable {
             if (currentTime >= nextLogicUpdateTime) {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
-                if(keyH.isNumberKeyJustPressed(1) && money >= SUnit2.getCost()){
+                if(keyH.isNumberKeyJustPressed(1) && money >= GunMan.getCost()){
+                    entities.add(new GunMan(this, 100, 400, "player"));
+                    money -= GunMan.getCost();
+                } else if(keyH.isNumberKeyJustPressed(2) && money >= SUnit2.getCost()){
                     entities.add(new SUnit2(this, 100, 400, "player"));
                     money -= SUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(2) && money >= MUnit2.getCost()){
+                } else if(keyH.isNumberKeyJustPressed(3) && money >= MUnit2.getCost()){
                     entities.add(new MUnit2(this, 100, 400, "player"));
                     money -= MUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(3) && money >= BUnit1.getCost()){
+                } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit1.getCost()){
                     entities.add(new BUnit1(this, 100, 400, "player"));
                     money -= BUnit1.getCost();
-                } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit2.getCost()){
+                } else if(keyH.isNumberKeyJustPressed(5) && money >= BUnit2.getCost()){
                     entities.add(new BUnit2(this, 100, 400, "player"));
                     money -= BUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(5)){
+                } /*else if(keyH.isNumberKeyJustPressed(5)){
                     entities.add(new GunMan(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(6)){
                     entities.add(new MUnit2(this, 1700, 400, "enemy"));
@@ -210,7 +213,7 @@ public class GamePanel extends JPanel implements Runnable {
                     entities.add(new BUnit1(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(8)){
                     entities.add(new BUnit2(this, 1700, 400, "enemy"));
-                }
+                }*/
                 /*if(keyH.upPressed){
                     entities.add(new MUnit2(this, 100, 100, "player"));
                 }else if(keyH.downPressed){
