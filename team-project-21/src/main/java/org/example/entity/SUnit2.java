@@ -56,7 +56,7 @@ public class SUnit2 extends LivingEntity{
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(gp.tileSize), getHeight()*gp.tileSize, getHeight()*gp.tileSize);
     }
-    public int getCost(){
+    public static int getCost(){
         return 10;
     }
     public int getMaxHealth(){
