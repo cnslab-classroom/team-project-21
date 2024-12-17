@@ -3,6 +3,7 @@ package org.example.entity;
 import java.awt.image.BufferedImage;
 
 import org.example.GamePanel;
+import org.example.entity.projectiles.ArchBullet;
 import org.example.entity.projectiles.BigBullet;
 
 public class BUnit1 extends LivingEntity {
@@ -15,6 +16,7 @@ public class BUnit1 extends LivingEntity {
     public BUnit1(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         setAttackDamage(15);
+        defaultDeathAnimation = false;
         moveSprites[0] = getImage("/textures/entities/gun_mecha/b_unit1_walk1.png");
         moveSprites[1] = getImage("/textures/entities/gun_mecha/b_unit1_walk2.png");
         moveSprites[2] = getImage("/textures/entities/gun_mecha/b_unit1_walk3.png");
@@ -67,6 +69,22 @@ public class BUnit1 extends LivingEntity {
                 }
             }
         }
+    }
+    public void tickDeath(){
+        sprite = dyingSprites[Math.max(0,(deathTicks-1)/2)];
+        if(deathTicks > getMaxDeathTicks() - 1){
+            setAttackDamage(0);
+            gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2){
+                public float getWidth(){
+                    return super.getWidth() * 2;
+                }
+                public float getHeight(){
+                    return super.getHeight() * 2;
+                }
+            });
+            gp.remove(this);
+        }
+        super.tickDeath();
     }
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(12 * gp.tileSize), getHeight()*gp.tileSize, getHeight()*gp.tileSize);

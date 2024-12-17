@@ -105,7 +105,7 @@ public class BUnit2 extends LivingEntity{
             }
         }
     }
-        public void findTarget(){
+    public void findTarget(){
         updateDetectRange();
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
             targetFound = false;
