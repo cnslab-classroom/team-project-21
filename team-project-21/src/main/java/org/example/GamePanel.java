@@ -10,11 +10,13 @@ import org.example.entity.MUnit2;
 import org.example.entity.Player;
 import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
-import org.example.utils.Mth;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import javax.sound.sampled.*; // Java Sound API
+import java.util.Queue;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -22,7 +24,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
     public final int originalTileSize = 16;
@@ -33,6 +34,12 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol;//768
     public final int screenHeight = tileSize * maxScreenRow;//576
 
+    // 최대 동시에 재생할 수 있는 음향 효과 개수
+    private static final int MAX_SOUNDS = 30;
+
+    // 소리 재생 큐
+    private final Queue<String> soundQueue = new LinkedList<>();
+    private final Queue<String> ambientSoundQueue = new LinkedList<>();
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
     Thread gameThread;
@@ -63,27 +70,50 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
-    /*
-    @Override
-    public void run(){
-        double drawInterval = 1000000000/FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
+    
 
-        while(gameThread != null){
-            currentTime = System.nanoTime();
-            delta +=(currentTime - lastTime)/drawInterval;
-            lastTime = currentTime;
-
-            if(delta>=1) {
-                update();
-                repaint();
-                delta--;
-            }
+    public void playSound(String soundPath) {
+        if (soundQueue.size() < MAX_SOUNDS) {
+            soundQueue.offer(soundPath);
         }
     }
-    */
+    public void playAmbientSound(String soundPath) {
+        if (soundQueue.size() + ambientSoundQueue.size() < MAX_SOUNDS) {
+            ambientSoundQueue.offer(soundPath);
+        }
+    }
+
+    private void processSoundQueue() {
+        int totalPlayedSounds = 0;
+    
+        // 일반 음향 효과 재생
+        while (!soundQueue.isEmpty() && totalPlayedSounds < MAX_SOUNDS) {
+            String soundPath = soundQueue.poll();
+            playAudio(soundPath);
+            totalPlayedSounds++;
+        }
+    
+        // 앰비언트 음향 효과 재생
+        while (!ambientSoundQueue.isEmpty() && totalPlayedSounds < MAX_SOUNDS) {
+            String soundPath = ambientSoundQueue.poll();
+            playAudio(soundPath);
+            totalPlayedSounds++;
+        }
+    }
+    
+    private void playAudio(String soundPath) {
+        try {
+            // 오디오 스트림 열기
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResource(soundPath));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            clip.start();
+        } catch (Exception e) {
+            System.err.println("음향 재생 실패: " + soundPath);
+            e.printStackTrace();
+        }
+    }
+
     int speed = 30;
     @Override
     public void run() {
@@ -175,6 +205,8 @@ public class GamePanel extends JPanel implements Runnable {
         for (Entity e : allEntities) {
             e.update();
         }
+
+        processSoundQueue();
 
     }
     public void addFreshEntity(Entity entity){
