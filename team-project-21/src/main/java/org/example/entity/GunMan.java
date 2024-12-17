@@ -33,9 +33,9 @@ public class GunMan extends LivingEntity{
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%4;
+                int ticks = (tickCount-attackTicks)%5; // 0.33초
                 
-                if(ticks<1){
+                if(ticks<2){
                     sprite = attackSprites[ticks];
                     if(ticks == 0)
                     gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 60, 10));

@@ -61,6 +61,6 @@ public class MUnit2 extends LivingEntity {
         return 10;
     }
     public int getMaxHealth(){
-        return 40;
+        return 45;
     }
 }

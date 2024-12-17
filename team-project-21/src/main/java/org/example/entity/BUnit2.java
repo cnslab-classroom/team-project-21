@@ -15,7 +15,7 @@ public class BUnit2 extends LivingEntity{
 
     public BUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
-        setAttackDamage(20);
+        setAttackDamage(7);
         moveSprites[0] = getImage("/textures/entities/big_unit2/unit4_move-1.png");
         moveSprites[1] = getImage("/textures/entities/big_unit2/unit4_move-2.png");
         moveSprites[2] = getImage("/textures/entities/big_unit2/unit4_move-3.png");
@@ -65,7 +65,7 @@ public class BUnit2 extends LivingEntity{
                 sprite = moveSprites[tickCount%8];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%100;
+                int ticks = (tickCount-attackTicks)%60; // 4초
                 
                 if(ticks<5){
                     sprite = attackSprites[ticks];
@@ -90,6 +90,6 @@ public class BUnit2 extends LivingEntity{
         return 10;
     }
     public int getMaxHealth(){
-        return 100;
+        return 110;
     }
 }

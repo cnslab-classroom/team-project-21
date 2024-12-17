@@ -58,7 +58,7 @@ public class BUnit1 extends LivingEntity {
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%40;
+                int ticks = (tickCount-attackTicks)%30; // 2초
                 
                 if(ticks<10){
                     sprite = attackSprites[ticks];
@@ -77,6 +77,6 @@ public class BUnit1 extends LivingEntity {
         return 10;
     }
     public int getMaxHealth(){
-        return 200;
+        return 250;
     }
 }
