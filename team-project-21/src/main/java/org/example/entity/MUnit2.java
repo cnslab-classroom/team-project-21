@@ -42,7 +42,7 @@ public class MUnit2 extends LivingEntity {
                 sprite = moveSprites[tickCount%2];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%50;
+                int ticks = (tickCount-attackTicks)%120; // 8초
                 
                 if(ticks<5){
                     sprite = attackSprites[ticks];
