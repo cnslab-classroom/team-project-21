@@ -12,6 +12,7 @@ import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
 import org.example.utils.Mth;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -152,13 +153,14 @@ public class GamePanel extends JPanel implements Runnable {
         return progress;
     }
     public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range, Comparator<T> comparator) {
-        // 필터링된 엔티티 리스트 반환
-        return entities.stream()
-                .filter(entity -> clazz.isInstance(entity)) // 주어진 클래스 타입에 해당하는 엔티티 필터링
-                .filter(entity -> entity.getHitbox().intersects(range)) // 범위 내에 있는지 확인
-                .map(clazz::cast) // 타입 캐스팅
-                .sorted(comparator) // 주어진 Comparator에 따라 정렬
-                .collect(Collectors.toList());
+        List<T> result = new ArrayList<>();
+        for (Entity entity : entities) {
+            if (clazz.isInstance(entity) && entity.getHitbox().intersects(range)) {
+                result.add(clazz.cast(entity));
+            }
+        }
+        result.sort(comparator);
+        return result;
     }
 
     public <T extends Entity> List<T> getEntitiesOfClass(Class<T> clazz, HitBox range) {
@@ -168,10 +170,9 @@ public class GamePanel extends JPanel implements Runnable {
     public void update(){
         //player.update();
 
-        for(Entity e:entities){
-            e.update();
-        }
-        for(Entity e:projectile_entities){
+        List<Entity> allEntities = new CopyOnWriteArrayList<>(entities);
+        allEntities.addAll(projectile_entities);
+        for (Entity e : allEntities) {
             e.update();
         }
 
@@ -205,16 +206,13 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         //player.draw(g2);
         g2.drawImage(getImage("/textures/tiles/background.png"),0,-96,screenWidth,screenHeight,null);
-        List<Entity> allEntities = new CopyOnWriteArrayList<>(entities); // 원본 리스트 안전하게 복사
-        allEntities.addAll(projectile_entities); // projectile_entities도 포함
-    
-        // z 값 기준으로 정렬 (z값이 작은 엔티티가 뒤쪽에 그려지도록)
-        allEntities.sort(Comparator.comparingInt(Entity::getZ));
-    
-        // 정렬된 순서로 그리기
-        for (Entity e : allEntities) {
-            e.draw(g2);
-        }
+        entities.stream()
+        .sorted(Comparator.comparingInt(Entity::getZ))
+        .forEach(e -> e.draw(g2));
+
+        projectile_entities.stream()
+        .sorted(Comparator.comparingInt(Entity::getZ))
+        .forEach(e -> e.draw(g2));
         /*
         for(Entity e:entities){
             e.draw(g2);

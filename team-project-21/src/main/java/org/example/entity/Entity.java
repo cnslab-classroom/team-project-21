@@ -6,10 +6,15 @@ import org.example.utils.Mth;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
 public abstract class Entity {
+    private static final Map<String, BufferedImage> imageCache = new HashMap<>();
+    public static final Random random = new Random();
     public GamePanel gp;
     public int x,prevX,y,prevY,z,prevZ,screenX,screenY;
     public int xSpeed, ySpeed, zSpeed;
@@ -60,24 +65,28 @@ public abstract class Entity {
             e.printStackTrace();
         }
     }
+
     public BufferedImage getImage(String input) {
-        try {
-            BufferedImage image = ImageIO.read(getClass().getResourceAsStream(input));
-            return image;
-        } catch (IOException e) {
-            System.err.println("이미지 로딩 중 오류 발생: " + input);
-            e.printStackTrace();
-            return null;
+        if (!imageCache.containsKey(input)) {
+            try {
+                BufferedImage image = ImageIO.read(getClass().getResourceAsStream(input));
+                imageCache.put(input, image);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+        return imageCache.get(input);
     }
+
     public void update(){
         prevX = x; prevY = y; prevZ = z;
-        tickCount++;
+        //tickCount++;
+        tickCount = (tickCount + 1) & 0x7FFFFFFF;
         if(hasGravity && !isOnGround()){
             ySpeed += getGravitySpeed();
         }
         push(xSpeed, ySpeed);
-        if(tickCount==Integer.MAX_VALUE) tickCount=0;
+        //tickCount = (tickCount + 1) & 0x7FFFFFFF;
 
         updateHitbox();
     };
@@ -141,7 +150,7 @@ public abstract class Entity {
     protected void drawMethod(Graphics2D g2){
         BufferedImage image = sprite;
         // 원근법에 따라 z 값 기반 스케일 계산
-        double scale = 1;
+        double scale = 1.1 / Math.cbrt(Math.max(1, (double)-z/40));
         int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
         int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
 
@@ -155,20 +164,5 @@ public abstract class Entity {
         } else if (direction.equals("left")) {
             g2.drawImage(image, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null);
         }
-        /*
-        double scale = 1.0 / Math.sqrt(Math.max(1, z));
-        if(direction == "right")
-            g2.drawImage(image,
-            Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) - (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
-            ,Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
-            ,(int)(getWidth()*gp.tileSize * scale)
-            ,(int)(getHeight()*gp.tileSize * scale),null);
-        else if(direction == "left")
-            g2.drawImage(image,
-            Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) + (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
-            ,Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
-            ,-(int)(getWidth()*gp.tileSize * scale)
-            ,(int)(getHeight()*gp.tileSize * scale),null);
-        */
     }
 }

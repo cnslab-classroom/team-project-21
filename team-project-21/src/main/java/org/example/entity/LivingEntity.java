@@ -7,7 +7,6 @@ import org.example.utils.Mth;
 
 import java.awt.geom.AffineTransform;
 import java.util.List;
-import java.util.Random;
 
 public abstract class LivingEntity extends Entity{
     private int currentHealth, attackDamage, deathTicks;
@@ -19,15 +18,15 @@ public abstract class LivingEntity extends Entity{
     
     public LivingEntity(GamePanel gp, int x, int y, String team){
         super(gp, x, y);
-        Random random = new Random();
-        z = -random.nextInt(100) + 1;
+        z = -random.nextInt(100)-1;
         this.team = team;
         this.state = 1;
         defaultDeathAnimation = true;
-        if(team=="player")
+        if ("player".equals(team)) {
             direction = "right";
-        else
+        } else {
             direction = "left";
+        }
         setCurrentHealth(getMaxHealth());
         detectRange = createDetectRange();
     }
@@ -130,18 +129,20 @@ public abstract class LivingEntity extends Entity{
             super.drawMethod(g2);
         } else if(defaultDeathAnimation){
             AffineTransform originalTransform = g2.getTransform();
-            double scale = 1.0 / Math.sqrt(Math.max(1, z));
+            double scale = 1.1 / Math.cbrt(Math.max(1, (double)-z/40));
             // Calculate position and rotation anchor
-            int drawX = Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress);
-            int drawY = Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z, gp.lerpProgress) - (int) (getHeight() * gp.tileSize);
-            int width = (int) (getWidth() * gp.tileSize * scale);
-            int height = (int) (getHeight() * gp.tileSize * scale);
+            int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
+            int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
+
+            // z 값을 반영한 좌표 계산
+            int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
+            int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight / 2;
 
             if (!isAlive() && deathTicks <= getMaxDeathTicks()) {
                 // Rotation logic for death
                 double rotationAngle = direction.equals("right") ? Math.toRadians((deathTicks+gp.lerpProgress)*8) : Math.toRadians(-(deathTicks+gp.lerpProgress)*8);
-                double pivotX = direction.equals("right") ? drawX - width / 2 : drawX + width / 2; // Pivot at the bottom-center
-                double pivotY = drawY + height/2;
+                double pivotX = direction.equals("right") ? drawX - scaledWidth / 2 : drawX + scaledWidth / 2; // Pivot at the bottom-center
+                double pivotY = drawY + scaledHeight/2;
 
                 g2.rotate(rotationAngle, pivotX, pivotY);
             }
