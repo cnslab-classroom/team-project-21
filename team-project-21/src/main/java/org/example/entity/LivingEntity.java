@@ -9,7 +9,7 @@ import java.awt.geom.AffineTransform;
 import java.util.List;
 
 public abstract class LivingEntity extends Entity{
-    private int currentHealth, attackDamage, deathTicks;
+    protected int currentHealth, attackDamage, deathTicks;
     protected boolean defaultDeathAnimation, targetFound, moving;
     private String team;
     public byte state;
