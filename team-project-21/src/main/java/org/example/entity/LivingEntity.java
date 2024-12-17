@@ -74,11 +74,14 @@ public abstract class LivingEntity extends Entity{
             }
         }
         else{
-            deathTicks++;
-            state = 0;
-            if(deathTicks > 10)
-                gp.remove(this);
+            tickDeath();
         }
+    }
+    public void tickDeath(){
+        deathTicks++;
+        state = 0;
+        if(deathTicks > getMaxDeathTicks())
+            gp.remove(this);
     }
     public int getMovementSpeed(){
         return 6;
