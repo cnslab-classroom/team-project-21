@@ -17,8 +17,7 @@ public abstract class LivingEntity extends Entity{
     public LivingEntity target;
     
     public LivingEntity(GamePanel gp, int x, int y, String team){
-        super(gp, x, y);
-        z = -random.nextInt(100)-1;
+        super(gp, x, y, -random.nextInt(100)-1);
         this.team = team;
         this.state = 1;
         defaultDeathAnimation = true;
@@ -141,8 +140,8 @@ public abstract class LivingEntity extends Entity{
             if (!isAlive() && deathTicks <= getMaxDeathTicks()) {
                 // Rotation logic for death
                 double rotationAngle = direction.equals("right") ? Math.toRadians((deathTicks+gp.lerpProgress)*8) : Math.toRadians(-(deathTicks+gp.lerpProgress)*8);
-                double pivotX = direction.equals("right") ? drawX - scaledWidth / 2 : drawX + scaledWidth / 2; // Pivot at the bottom-center
-                double pivotY = drawY + scaledHeight/2;
+                double pivotX = drawX + scaledWidth / 2; // Pivot at the bottom-center
+                double pivotY = drawY + scaledHeight / 2;
 
                 g2.rotate(rotationAngle, pivotX, pivotY);
             }

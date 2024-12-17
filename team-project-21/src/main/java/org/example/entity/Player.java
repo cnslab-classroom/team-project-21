@@ -30,7 +30,7 @@ public class Player extends LivingEntity{
         if(heightDel>0)heightDel--;
         if(shoot && !keyH.spacePressed){
             for(int i=0;i<10;i++)
-            gp.addFreshEntityP(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), this, 20+i, 20+i));
+            gp.addFreshEntityP(new AppleProjectile(gp, x, y - (int)(getHeight() * gp.tileSize), z, this, 20+i, 20+i));
             heightDel=5;
         }
         shoot = keyH.spacePressed;

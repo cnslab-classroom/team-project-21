@@ -7,8 +7,8 @@ import org.example.entity.LivingEntity;
 
 public class ArchBullet extends Projectile{
     int deathTicks;
-    public ArchBullet(GamePanel gp, int x, int y, LivingEntity Owner, int speed, int deathTicks){
-        super(gp, x, y, Owner, speed);
+    public ArchBullet(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed, int deathTicks){
+        super(gp, x, y, z, Owner, speed);
         this.speed = speed;
         setImage("/textures/entities/big_bullet.png");
         xSpeed = direction=="right"? speed:-speed;

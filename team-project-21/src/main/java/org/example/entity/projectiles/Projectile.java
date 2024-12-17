@@ -8,8 +8,8 @@ public abstract class Projectile extends Entity{
     public LivingEntity Owner;
     public int speed, damage;
     public boolean isHit;
-    public Projectile(GamePanel gp, int x, int y, LivingEntity Owner, int speed){
-        super(gp,x,y);
+    public Projectile(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed){
+        super(gp,x,y,z);
         this.Owner = Owner;
         z= Owner.z;
         direction = Owner.direction;

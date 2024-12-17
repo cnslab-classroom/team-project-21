@@ -33,7 +33,8 @@ public class BUnit2 extends LivingEntity{
         readySprites[1] = getImage("/textures/entities/big_unit2/unit4_atk-2.png");
         readySprites[2] = getImage("/textures/entities/big_unit2/unit4_atk-3.png");
         readySprites[3] = getImage("/textures/entities/big_unit2/unit4_atk-4.png");
-        /*dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
+        /*
+        dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
         dyingSprites[1] = getImage("/textures/entities/gun_mecha_b_unit1_die2");
         dyingSprites[2] = getImage("/textures/entities/gun_mecha_b_unit1_die3");
         dyingSprites[3] = getImage("/textures/entities/gun_mecha_b_unit1_die4");
@@ -43,11 +44,11 @@ public class BUnit2 extends LivingEntity{
 
     @Override
     public float getWidth(){
-        return 2;
+        return 3;
     }
     @Override
     public float getHeight(){
-        return 2;
+        return 3;
     }
     public int getMovementSpeed(){
         return 16;
@@ -69,7 +70,7 @@ public class BUnit2 extends LivingEntity{
                 if(ticks<5){
                     sprite = attackSprites[ticks];
                     if(ticks == 1)
-                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, (int)Math.sqrt((double)3*Math.abs(target.x+target.xSpeed-this.x-this.xSpeed)), 80));
+                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x+target.xSpeed-this.x-this.xSpeed)), 80));
                 }else{
                     sprite = attackSprites[0];
                 }
@@ -77,8 +78,10 @@ public class BUnit2 extends LivingEntity{
         }
     }
     public void travel(){
-        if(tickCount % 8 == 3 || tickCount % 8 == 7)
+        int mod = tickCount & 7; // % 8 대신 비트 연산
+        if (mod == 3 || mod == 7) {
             super.travel();
+        }
     }
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(24 * gp.tileSize), getHeight()*gp.tileSize, 10*gp.tileSize);

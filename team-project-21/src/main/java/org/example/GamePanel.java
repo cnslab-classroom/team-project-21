@@ -213,14 +213,6 @@ public class GamePanel extends JPanel implements Runnable {
         projectile_entities.stream()
         .sorted(Comparator.comparingInt(Entity::getZ))
         .forEach(e -> e.draw(g2));
-        /*
-        for(Entity e:entities){
-            e.draw(g2);
-        }
-        for(Entity e:projectile_entities){
-            e.draw(g2);
-        }
-        */
 
         g2.dispose();
     }

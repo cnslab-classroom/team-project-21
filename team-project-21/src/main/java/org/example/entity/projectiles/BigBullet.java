@@ -7,8 +7,8 @@ import org.example.entity.LivingEntity;
 
 public class BigBullet extends Projectile{
     int deathTicks;
-    public BigBullet(GamePanel gp, int x, int y, LivingEntity Owner, int speed, int deathTicks){
-        super(gp, x, y, Owner, speed);
+    public BigBullet(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed, int deathTicks){
+        super(gp, x, y, z, Owner, speed);
         this.speed = speed;
         setImage("/textures/entities/big_bullet.png");
         xSpeed = direction=="right"? speed:-speed;
@@ -27,7 +27,7 @@ public class BigBullet extends Projectile{
     public void update(){
         super.update();
         if(!isHit){
-            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize / 2));
+            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize));
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
                     entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());

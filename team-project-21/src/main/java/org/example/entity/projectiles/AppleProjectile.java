@@ -8,8 +8,8 @@ import org.example.entity.LivingEntity;
 
 public class AppleProjectile extends Projectile{
     int deathTicks;
-    public AppleProjectile(GamePanel gp, int x, int y, LivingEntity Owner, int speed, int deathTicks){
-        super(gp, x, y, Owner, speed);
+    public AppleProjectile(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed, int deathTicks){
+        super(gp, x, y, z, Owner, speed);
         this.speed = speed;
         setImage("/textures/entities/apple.png");
         xSpeed = direction=="right"? speed:-speed;

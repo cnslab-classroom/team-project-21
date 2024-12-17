@@ -47,7 +47,7 @@ public class MUnit2 extends LivingEntity {
                 if(ticks<5){
                     sprite = attackSprites[ticks];
                     if(ticks == 1)
-                    gp.addFreshEntityP(new AntiairBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 80, 8));
+                    gp.addFreshEntityP(new AntiairBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 80, 8));
                 }else{
                     sprite = moveSprites[0];
                 }

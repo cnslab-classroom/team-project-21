@@ -29,7 +29,8 @@ public class BUnit1 extends LivingEntity {
         attackSprites[7] = getImage("/textures/entities/gun_mecha/b_unit1_atk8.png");
         attackSprites[8] = getImage("/textures/entities/gun_mecha/b_unit1_atk9.png");
         attackSprites[9] = getImage("/textures/entities/gun_mecha/b_unit1_atk10.png");
-        /*dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
+        /*
+        dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
         dyingSprites[1] = getImage("/textures/entities/gun_mecha_b_unit1_die2");
         dyingSprites[2] = getImage("/textures/entities/gun_mecha_b_unit1_die3");
         dyingSprites[3] = getImage("/textures/entities/gun_mecha_b_unit1_die4");
@@ -62,7 +63,7 @@ public class BUnit1 extends LivingEntity {
                 if(ticks<10){
                     sprite = attackSprites[ticks];
                     if(ticks == 2 || ticks == 7)
-                    gp.addFreshEntityP(new BigBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/4, this, 100, 8));
+                    gp.addFreshEntityP(new BigBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/4, z, this, 100, 8));
                 }else{
                     sprite = moveSprites[0];
                 }

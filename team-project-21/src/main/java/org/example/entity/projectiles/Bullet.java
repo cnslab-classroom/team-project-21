@@ -7,8 +7,8 @@ import org.example.entity.LivingEntity;
 
 public class Bullet extends Projectile{
     int deathTicks;
-    public Bullet(GamePanel gp, int x, int y, LivingEntity Owner, int speed, int deathTicks){
-        super(gp, x, y, Owner, speed);
+    public Bullet(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed, int deathTicks){
+        super(gp, x, y, z, Owner, speed);
         this.speed = speed;
         setImage("/textures/entities/bullet.png");
         xSpeed = direction=="right"? speed:-speed;

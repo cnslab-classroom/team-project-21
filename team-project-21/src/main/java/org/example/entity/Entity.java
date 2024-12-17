@@ -31,13 +31,13 @@ public abstract class Entity {
     }
 
 
-    public Entity(GamePanel gp, int x, int y){
+    public Entity(GamePanel gp, int x, int y, int z){
         this.gp = gp;
         noCulling = false;
         hasGravity = true;
         xSpeed = ySpeed = zSpeed = 0;
         direction = "right";
-        locate(x, y);
+        locate(x, y, z);
         this.hitbox = createHitbox();
     }
     public HitBox createHitbox() {
@@ -101,6 +101,15 @@ public abstract class Entity {
         this.prevX=x;
         this.y=y;
         this.prevY=y;
+    }
+
+    public void locate(int x, int y, int z){
+        this.x=x;
+        this.prevX=x;
+        this.y=y;
+        this.prevY=y;
+        this.z = z;
+        this.prevZ = z;
     }
 
     //prev 좌표는 조작하지 않기 때문에 해당 좌표로 엔티티가 재빠르게 움직이는 것처럼 보일 것임
