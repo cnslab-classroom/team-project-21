@@ -11,7 +11,7 @@ public class BUnit2 extends LivingEntity{
     public BufferedImage[] moveSprites = new BufferedImage[8];
     public BufferedImage[] readySprites = new BufferedImage[4];
     public BufferedImage[] attackSprites = new BufferedImage[5];
-    public BufferedImage[] dyingSprites = new BufferedImage[5];
+    public BufferedImage[] dyingSprites = new BufferedImage[6];
 
     public BUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
@@ -33,13 +33,12 @@ public class BUnit2 extends LivingEntity{
         readySprites[1] = getImage("/textures/entities/big_unit2/unit4_atk-2.png");
         readySprites[2] = getImage("/textures/entities/big_unit2/unit4_atk-3.png");
         readySprites[3] = getImage("/textures/entities/big_unit2/unit4_atk-4.png");
-        /*
-        dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
-        dyingSprites[1] = getImage("/textures/entities/gun_mecha_b_unit1_die2");
-        dyingSprites[2] = getImage("/textures/entities/gun_mecha_b_unit1_die3");
-        dyingSprites[3] = getImage("/textures/entities/gun_mecha_b_unit1_die4");
-        dyingSprites[4] = getImage("/textures/entities/gun_mecha_b_unit1_die5");
-        */
+        dyingSprites[0] = getImage("/textures/entities/big_unit2/unit4_death-1.png");
+        dyingSprites[1] = getImage("/textures/entities/big_unit2/unit4_death-2.png");
+        dyingSprites[2] = getImage("/textures/entities/big_unit2/unit4_death-3.png");
+        dyingSprites[3] = getImage("/textures/entities/big_unit2/unit4_death-4.png");
+        dyingSprites[4] = getImage("/textures/entities/big_unit2/unit4_death-5.png");
+        dyingSprites[5] = getImage("/textures/entities/big_unit2/unit4_death-6.png");
     }
 
     @Override
