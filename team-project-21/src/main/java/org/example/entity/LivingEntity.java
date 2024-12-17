@@ -149,27 +149,29 @@ public abstract class LivingEntity extends Entity{
     public void drawMethod(Graphics2D g2){
         if (isAlive()) {
             super.drawMethod(g2);
-        } else if(defaultDeathAnimation){
-            AffineTransform originalTransform = g2.getTransform();
-            double scale = 1.1 / Math.cbrt(Math.max(1, (double)-z/40));
-            // Calculate position and rotation anchor
-            int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
-            int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
+        } else {
+            if(defaultDeathAnimation){
+                AffineTransform originalTransform = g2.getTransform();
+                double scale = 1.1 / Math.cbrt(Math.max(1, (double)-z/40));
+                // Calculate position and rotation anchor
+                int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
+                int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
 
-            // z 값을 반영한 좌표 계산
-            int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
-            int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight / 2;
+                // z 값을 반영한 좌표 계산
+                int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
+                int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight / 2;
 
-            if (!isAlive() && deathTicks <= getMaxDeathTicks()) {
-                // Rotation logic for death
-                double rotationAngle = direction.equals("right") ? Math.toRadians((deathTicks+gp.lerpProgress)*8) : Math.toRadians(-(deathTicks+gp.lerpProgress)*8);
-                double pivotX = drawX + scaledWidth / 2; // Pivot at the bottom-center
-                double pivotY = drawY + scaledHeight / 2;
+                if (!isAlive() && deathTicks <= getMaxDeathTicks()) {
+                    // Rotation logic for death
+                    double rotationAngle = direction.equals("right") ? Math.toRadians((deathTicks+gp.lerpProgress)*8) : Math.toRadians(-(deathTicks+gp.lerpProgress)*8);
+                    double pivotX = drawX + scaledWidth / 2; // Pivot at the bottom-center
+                    double pivotY = drawY + scaledHeight / 2;
 
-                g2.rotate(rotationAngle, pivotX, pivotY);
-            }
-            super.drawMethod(g2);
-            g2.setTransform(originalTransform); // Restore original transform
+                    g2.rotate(rotationAngle, pivotX, pivotY);
+                }
+                super.drawMethod(g2);
+                g2.setTransform(originalTransform); // Restore original transform
+            }else super.drawMethod(g2);
         }
     }
 }

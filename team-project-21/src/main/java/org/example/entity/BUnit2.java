@@ -66,13 +66,16 @@ public class BUnit2 extends LivingEntity{
                 sprite = moveSprites[tickCount%8];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%5; // 4초
+                int ticks = ((tickCount-attackTicks)%20)/2;
                 
                 if(ticks<4){
                     sprite = readySprites[ticks];
                 } else{
-                    state = 3;
-                    attackTicks = tickCount;
+                    sprite = attackSprites[0];
+                    if(ticks>8) {
+                        state = 3;
+                        attackTicks = tickCount;
+                    }
                 }
             }
             case 3 -> {
@@ -89,12 +92,15 @@ public class BUnit2 extends LivingEntity{
                 }
             }
             case 4 -> {
-                int ticks = (tickCount-attackTicks)%5; // 4초
+                int ticks = ((tickCount-attackTicks)%20)/2;
                 
                 if(ticks<4){
                     sprite = readySprites[3 - ticks];
                 } else{
-                    state = 1;
+                    sprite = moveSprites[0];
+                    if(ticks>8){
+                        state = 1;
+                    }
                 }
             }
         }
@@ -122,10 +128,17 @@ public class BUnit2 extends LivingEntity{
             }
     }
     public void tickDeath(){
-        sprite = dyingSprites[4];
+        sprite = dyingSprites[Math.max(0,(deathTicks-1)/2)];
         if(deathTicks > getMaxDeathTicks() - 1){
             setAttackDamage(0);
-            gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2));
+            gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2){
+                public float getWidth(){
+                    return super.getWidth() * 2;
+                }
+                public float getHeight(){
+                    return super.getHeight() * 2;
+                }
+            });
             gp.remove(this);
         }
         super.tickDeath();
