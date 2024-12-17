@@ -141,18 +141,19 @@ public abstract class Entity {
     protected void drawMethod(Graphics2D g2){
         BufferedImage image = sprite;
         // 원근법에 따라 z 값 기반 스케일 계산
-        double scale = 1; // z가 0인 경우를 방지
+        double scale = 1;
         int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
         int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
 
-        // 좌표 계산 (정중앙 배치를 위해 크기의 절반을 빼줌)
+        // z 값을 반영한 좌표 계산
         int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
         int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight;
 
+        // 이미지 그리기
         if (direction.equals("right")) {
             g2.drawImage(image, drawX, drawY, scaledWidth, scaledHeight, null);
         } else if (direction.equals("left")) {
-            g2.drawImage(image, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null); // 좌우 반전
+            g2.drawImage(image, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null);
         }
         /*
         double scale = 1.0 / Math.sqrt(Math.max(1, z));

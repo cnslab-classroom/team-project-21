@@ -69,7 +69,7 @@ public class BUnit2 extends LivingEntity{
                 if(ticks<5){
                     sprite = attackSprites[ticks];
                     if(ticks == 1)
-                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 40, 80));
+                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, (int)Math.sqrt((double)3*Math.abs(target.x+target.xSpeed-this.x-this.xSpeed)), 80));
                 }else{
                     sprite = attackSprites[0];
                 }
@@ -81,7 +81,7 @@ public class BUnit2 extends LivingEntity{
             super.travel();
     }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, z, (int)(24 * gp.tileSize), getHeight()*gp.tileSize, 6*gp.tileSize);
+        return new HitBox(x, y, z, (int)(24 * gp.tileSize), getHeight()*gp.tileSize, 10*gp.tileSize);
     }
     public int getCost(){
         return 10;
