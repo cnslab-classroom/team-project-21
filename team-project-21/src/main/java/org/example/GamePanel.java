@@ -414,7 +414,7 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         //player.draw(g2);
         g2.drawImage(getImage("/textures/tiles/background.png"),0,-96,screenWidth,screenHeight,null);
-        entities.stream()
+        if(!gameOver) {entities.stream()
         .sorted(Comparator.comparingInt(Entity::getZ))
         .forEach(e -> e.draw(g2));
 
@@ -425,7 +425,23 @@ public class GamePanel extends JPanel implements Runnable {
         g2.setFont(UI);
         g2.setColor(Color.white);
         interfaceX = 0;
-        interfaceY = screenHeight - 60;
+        interfaceY = screenHeight - 60;}
+        else         if (!gameOver) {
+            entities.stream()
+                .sorted(Comparator.comparingInt(Entity::getZ))
+                .forEach(e -> e.draw(g2));
+            projectile_entities.stream()
+                .sorted(Comparator.comparingInt(Entity::getZ))
+                .forEach(e -> e.draw(g2));
+        } else {
+            // 게임 오버 화면 그리기
+            g2.setColor(Color.RED);
+            g2.setFont(new Font("Arial", Font.BOLD, 48));
+            int msgWidth = g2.getFontMetrics().stringWidth(gameOverMessage);
+            g2.drawString(gameOverMessage, (screenWidth - msgWidth) / 2, screenHeight / 2);
+            g2.setFont(new Font("Arial", Font.PLAIN, 24));
+            g2.drawString("Press space bar to restart...", screenWidth / 2 - 150, screenHeight / 2 + 50);
+        }
 
         g2.drawString("Money = " + player_money, interfaceX, interfaceY);
 

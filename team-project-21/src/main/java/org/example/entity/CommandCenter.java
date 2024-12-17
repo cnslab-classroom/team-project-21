@@ -20,9 +20,9 @@ public class CommandCenter extends LivingEntity{
         if(deathTicks > getMaxDeathTicks() - 1){
             System.out.println("Command Center of " + getTeam() + " destroyed!");
             if (getTeam().equals("player")) {
-                gp.onGameOver("패배했습니다. 게임 오버.");
+                gp.onGameOver("You lost!");
             } else {
-                gp.onGameOver("승리했습니다. 게임 클리어!");
+                gp.onGameOver("You won!");
             }
             gp.remove(this);
         }
