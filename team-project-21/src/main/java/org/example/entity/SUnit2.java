@@ -14,6 +14,7 @@ public class SUnit2 extends LivingEntity{
     public SUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         setAttackDamage(10);
+        knockbackResist = 0.5f;
         moveSprites[0] = getImage("/textures/entities/shield_man/shield_man_idle.png");
         moveSprites[1] = getImage("/textures/entities/shield_man/shield_man_move1.png");
         moveSprites[2] = moveSprites[0];

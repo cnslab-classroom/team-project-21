@@ -15,10 +15,12 @@ public abstract class LivingEntity extends Entity{
     public byte state;
     public HitBox detectRange;
     public LivingEntity target;
+    public float knockbackResist;
 
     public LivingEntity(GamePanel gp, int x, int y, int z, String team){
         super(gp, x, y, z);
         this.team = team;
+        knockbackResist=1;
         this.state = 1;
         defaultDeathAnimation = true;
         if ("player".equals(team)) {
@@ -29,7 +31,10 @@ public abstract class LivingEntity extends Entity{
         setCurrentHealth(getMaxHealth());
         detectRange = createDetectRange();
     }
-    
+    public void knockback(int vectorX, int vectorY){
+        this.xSpeed += vectorX * knockbackResist;
+        this.ySpeed += vectorY * knockbackResist;
+    }
     public LivingEntity(GamePanel gp, int x, int y, String team){
         super(gp, x, y, -random.nextInt(100)-1);
         this.team = team;

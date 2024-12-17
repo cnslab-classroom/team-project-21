@@ -16,6 +16,7 @@ public class BUnit1 extends LivingEntity {
     public BUnit1(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         setAttackDamage(8);
+        knockbackResist = 0.1f;
         defaultDeathAnimation = false;
         moveSprites[0] = getImage("/textures/entities/gun_mecha/b_unit1_walk1.png");
         moveSprites[1] = getImage("/textures/entities/gun_mecha/b_unit1_walk2.png");

@@ -32,8 +32,7 @@ public class AntiairBullet extends Projectile{
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
                     entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
-                    //entityiterator.xSpeed += direction=="right"?2:-2;
-                    //entityiterator.ySpeed -= 1;
+                    entityiterator.knockback(this.x < entityiterator.x ?10:-10, 0);
                     deathTicks=tickCount;
                     isHit = true;
                     break;

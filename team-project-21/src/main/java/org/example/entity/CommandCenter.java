@@ -11,6 +11,7 @@ public class CommandCenter extends LivingEntity{
     public CommandCenter(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         z = -75;
+        knockbackResist = 0;
         stateSpirtes[0] = getImage("/textures/entities/command_center.png");
         stateSpirtes[1] = getImage("/textures/entities/command_center_damaged1.png");
         stateSpirtes[2] = getImage("/textures/entities/command_center_damaged2.png");
