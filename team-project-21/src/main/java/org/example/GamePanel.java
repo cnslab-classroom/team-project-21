@@ -10,7 +10,6 @@ import org.example.entity.MUnit2;
 import org.example.entity.Player;
 import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
-import org.example.utils.Mth;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 public class GamePanel extends JPanel implements Runnable {
     public final int originalTileSize = 16;
@@ -63,27 +61,7 @@ public class GamePanel extends JPanel implements Runnable {
         gameThread = new Thread(this);
         gameThread.start();
     }
-    /*
-    @Override
-    public void run(){
-        double drawInterval = 1000000000/FPS;
-        double delta = 0;
-        long lastTime = System.nanoTime();
-        long currentTime;
-
-        while(gameThread != null){
-            currentTime = System.nanoTime();
-            delta +=(currentTime - lastTime)/drawInterval;
-            lastTime = currentTime;
-
-            if(delta>=1) {
-                update();
-                repaint();
-                delta--;
-            }
-        }
-    }
-    */
+    
     int speed = 30;
     @Override
     public void run() {
