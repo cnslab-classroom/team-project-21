@@ -62,10 +62,10 @@ public class GamePanel extends JPanel implements Runnable {
     private final int LOGIC_FPS = 15;
     public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
-    private int money = 100;
-    private int get_money = 1;
-    private double money_interval = logicInterval * 4;
-    private double next_money = System.nanoTime() + money_interval;
+    private int money;
+    private int get_money;
+    private double money_interval;
+    private double next_money;
 
     private int interfaceX;
     private int interfaceY;
@@ -83,8 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread(){
-        entities.add(new CommandCenter(this, 100, 100, "player"));
-        entities.add(new CommandCenter(this, 1700, 100, "enemy"));
+        resetGame();
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -171,6 +170,27 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     int speed = 30;
+    private boolean isGameStarted = false; // 게임 시작 여부
+    private boolean gameOver = false;      // 게임 종료 여부
+    private String gameOverMessage = "";   // 승리 또는 패배 메시지
+
+    private void resetGame() {
+        isGameStarted = false;
+        gameOver = false;
+        gameOverMessage = "";
+        entities.clear();
+        projectile_entities.clear();
+        entities.add(new CommandCenter(this, 100, 100, "player"));
+        entities.add(new CommandCenter(this, 1700, 100, "enemy"));
+        System.out.println("Game Reset!");
+    }
+
+    public void onGameOver(String message) {
+        this.gameOver = true;
+        this.gameOverMessage = message;
+        repaint();
+    }
+
     @Override
     public void run() {
         logicInterval = 1000000000.0 / LOGIC_FPS;
@@ -181,53 +201,69 @@ public class GamePanel extends JPanel implements Runnable {
         previousRenderTime = System.nanoTime();
 
         money = 100;
-        get_money = 1;
+        get_money = 10;
         money_interval = logicInterval * 4;
         next_money = System.nanoTime() + money_interval;
 
         while (gameThread != null) {
             long currentTime = System.nanoTime();
-            if (currentTime >= nextLogicUpdateTime) {
-                prevActualX = actualX; prevActualY = actualY;
-                update();
-                if(keyH.isNumberKeyJustPressed(1) && money >= SUnit2.getCost()){
-                    entities.add(new SUnit2(this, 100, 400, "player"));
-                    money -= SUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(2) && money >= MUnit2.getCost()){
-                    entities.add(new MUnit2(this, 100, 400, "player"));
-                    money -= MUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(3) && money >= BUnit1.getCost()){
-                    entities.add(new BUnit1(this, 100, 400, "player"));
-                    money -= BUnit1.getCost();
-                } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit2.getCost()){
-                    entities.add(new BUnit2(this, 100, 400, "player"));
-                    money -= BUnit2.getCost();
-                } else if(keyH.isNumberKeyJustPressed(5)){
-                    entities.add(new GunMan(this, 1700, 400, "enemy"));
-                } else if(keyH.isNumberKeyJustPressed(6)){
-                    entities.add(new MUnit2(this, 1700, 400, "enemy"));
-                } else if(keyH.isNumberKeyJustPressed(7)){
-                    entities.add(new BUnit1(this, 1700, 400, "enemy"));
-                } else if(keyH.isNumberKeyJustPressed(8)){
-                    entities.add(new BUnit2(this, 1700, 400, "enemy"));
-                }
-                /*if(keyH.upPressed){
-                    entities.add(new MUnit2(this, 100, 100, "player"));
-                }else if(keyH.downPressed){
-                    entities.add(new BUnit2(this, 1700, 100, "enemy"));
-                }else */
-                if(keyH.rightPressed){
-                    actualX-=speed;
-                }else if(keyH.leftPressed){
-                    actualX+=speed;
-                }
 
-                if(currentTime >= next_money){
-                    money += get_money;
-                    next_money += money_interval;
+            if (!isGameStarted) {
+                if (keyH.spacePressed) { // 스페이스 키로 게임 시작
+                    isGameStarted = true;
+                    System.out.println("Game Started!");
                 }
+            } else if (gameOver) {
+                // 게임 종료 후 R키를 누르면 재시작
+                if (keyH.spacePressed) {
+                    resetGame();
+                }
+            } else {
+                if (currentTime >= nextLogicUpdateTime) {
+                    prevActualX = actualX; prevActualY = actualY;
+                    update();
+                    if(keyH.isNumberKeyJustPressed(1) && money >= GunMan.getCost()){
+                        entities.add(new GunMan(this, 100, 400, "player"));
+                        money -= GunMan.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(2) && money >= SUnit2.getCost()){
+                        entities.add(new SUnit2(this, 100, 400, "player"));
+                        money -= SUnit2.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(3) && money >= MUnit2.getCost()){
+                        entities.add(new MUnit2(this, 100, 400, "player"));
+                        money -= MUnit2.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit1.getCost()){
+                        entities.add(new BUnit1(this, 100, 400, "player"));
+                        money -= BUnit1.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(5) && money >= BUnit2.getCost()){
+                        entities.add(new BUnit2(this, 100, 400, "player"));
+                        money -= BUnit2.getCost();
+                    } /*else if(keyH.isNumberKeyJustPressed(5)){
+                        entities.add(new GunMan(this, 1700, 400, "enemy"));
+                    } else if(keyH.isNumberKeyJustPressed(6)){
+                        entities.add(new MUnit2(this, 1700, 400, "enemy"));
+                    } else if(keyH.isNumberKeyJustPressed(7)){
+                        entities.add(new BUnit1(this, 1700, 400, "enemy"));
+                    } else if(keyH.isNumberKeyJustPressed(8)){
+                        entities.add(new BUnit2(this, 1700, 400, "enemy"));
+                    }*/
+                    /*if(keyH.upPressed){
+                        entities.add(new MUnit2(this, 100, 100, "player"));
+                    }else if(keyH.downPressed){
+                        entities.add(new BUnit2(this, 1700, 100, "enemy"));
+                    }else */
+                    if(keyH.rightPressed){
+                        actualX-=speed;
+                    }else if(keyH.leftPressed){
+                        actualX+=speed;
+                    }
 
-                nextLogicUpdateTime += logicInterval;
+                    if(currentTime >= next_money){
+                        money += get_money;
+                        next_money += money_interval;
+                    }
+
+                    nextLogicUpdateTime += logicInterval;
+                }
             }
 
             if (currentTime >= nextRenderTime) {

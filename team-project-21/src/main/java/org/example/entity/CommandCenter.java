@@ -16,6 +16,18 @@ public class CommandCenter extends LivingEntity{
         stateSpirtes[2] = getImage("/textures/entities/command_center_damaged2.png");
         stateSpirtes[3] = getImage("/textures/entities/command_center_damaged3.png");
     }
+    public void tickDeath(){
+        if(deathTicks > getMaxDeathTicks() - 1){
+            System.out.println("Command Center of " + getTeam() + " destroyed!");
+            if (getTeam().equals("player")) {
+                gp.onGameOver("패배했습니다. 게임 오버.");
+            } else {
+                gp.onGameOver("승리했습니다. 게임 클리어!");
+            }
+            gp.remove(this);
+        }
+        super.tickDeath();
+    }
     public void tickLiving(){
         prevState = state;
         if(getCurrentHealth() > getMaxHealth() * 0.75)
