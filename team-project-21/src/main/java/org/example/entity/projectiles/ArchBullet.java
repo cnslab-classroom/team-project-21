@@ -37,7 +37,7 @@ public class ArchBullet extends Projectile{
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
                     entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
                     if(hitCount++>5) break;
-                    entityiterator.knockback(this.x < entityiterator.x ?15:-15, -50);
+                    entityiterator.knockback(this.x < entityiterator.x ?15:-15, -30);
                 }
             }
         }

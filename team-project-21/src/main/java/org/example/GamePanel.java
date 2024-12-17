@@ -414,26 +414,36 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         //player.draw(g2);
         g2.drawImage(getImage("/textures/tiles/background.png"),0,-96,screenWidth,screenHeight,null);
-        if(!gameOver) {entities.stream()
-        .sorted(Comparator.comparingInt(Entity::getZ))
-        .forEach(e -> e.draw(g2));
+        if (!isGameStarted) {
+            g2.setColor(Color.BLUE);
+            g2.setFont(new Font("Arial", Font.BOLD, 48));
+            int msgWidth = g2.getFontMetrics().stringWidth("Press space bar to START");
+            g2.drawString("Press space bar to START", (screenWidth - msgWidth) / 2, screenHeight / 2);
+        }
+        else if(!gameOver) {
+            // 2단계: 그림자 그리기
+            for (Entity e : entities) {
+                e.drawShadow(g2);
+            }
 
-        projectile_entities.stream()
-        .sorted(Comparator.comparingInt(Entity::getZ))
-        .forEach(e -> e.draw(g2));
-
-        g2.setFont(UI);
-        g2.setColor(Color.white);
-        interfaceX = 0;
-        interfaceY = screenHeight - 60;}
-        else         if (!gameOver) {
+            // 3단계: 본체 그리기
+            for (Entity e : projectile_entities) {
+                e.drawShadow(g2);
+            }
             entities.stream()
-                .sorted(Comparator.comparingInt(Entity::getZ))
-                .forEach(e -> e.draw(g2));
+            .sorted(Comparator.comparingInt(Entity::getZ))
+            .forEach(e -> e.draw(g2));
+
             projectile_entities.stream()
-                .sorted(Comparator.comparingInt(Entity::getZ))
-                .forEach(e -> e.draw(g2));
-        } else {
+            .sorted(Comparator.comparingInt(Entity::getZ))
+            .forEach(e -> e.draw(g2));
+
+            g2.setFont(UI);
+            g2.setColor(Color.white);
+            interfaceX = 0;
+            interfaceY = screenHeight - 60;
+        }
+        else {
             // 게임 오버 화면 그리기
             g2.setColor(Color.RED);
             g2.setFont(new Font("Arial", Font.BOLD, 48));

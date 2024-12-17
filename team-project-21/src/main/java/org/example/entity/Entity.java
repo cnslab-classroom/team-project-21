@@ -126,6 +126,10 @@ public abstract class Entity {
             xSpeed *= 0.5;
             zSpeed *= 0.5;
         }
+        if(isWall()){
+            x = x <= 0 ? 0 : 1700;
+            xSpeed *= -1;
+        }
     }
     public void push(int vectorX, int vectorY, int vectorZ){
         this.z += vectorZ;
@@ -134,7 +138,9 @@ public abstract class Entity {
     public boolean isOnGround(){
         return y>=450;
     }
-    
+    public boolean isWall(){
+        return x < 0 || x > 1700;
+    }
     
     
     public float getWidth(){
@@ -156,6 +162,21 @@ public abstract class Entity {
             drawMethod(g2);
         }
     }
+
+
+    public void drawShadow(Graphics2D g2) {
+        // 그림자 스케일 및 크기 계산 (z 값에 따라 그림자가 작아짐)
+        double scale = 1.1 / Math.cbrt(Math.max(1, (double)-z / 40)); 
+        int shadowWidth = (int) (getWidth() * gp.tileSize * scale / Math.cbrt(Math.max(1, (double)(450 - y)/40)));
+        int shadowHeight = (int) (getWidth() * gp.tileSize * scale * 0.3f / Math.cbrt(Math.max(1, (double)(450 - y)/40))); // 그림자 높이 감소
+    
+        // 그림자 위치 설정 (바닥에 그림자를 그리도록)
+        int shadowX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - shadowWidth / 2;
+        int shadowY = (int) Mth.lerp((int)(prevZ * scale), (int)(z * scale), gp.lerpProgress) + 455 - shadowHeight;
+        g2.setColor(new Color(0, 0, 0, 100)); // 반투명 검은색
+        g2.fillOval(shadowX, shadowY, shadowWidth, shadowHeight);
+    }
+
     protected void drawMethod(Graphics2D g2){
         BufferedImage image = sprite;
         // 원근법에 따라 z 값 기반 스케일 계산

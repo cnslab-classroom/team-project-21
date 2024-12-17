@@ -179,5 +179,6 @@ public abstract class LivingEntity extends Entity{
                 g2.setTransform(originalTransform); // Restore original transform
             }else super.drawMethod(g2);
         }
+
     }
 }
