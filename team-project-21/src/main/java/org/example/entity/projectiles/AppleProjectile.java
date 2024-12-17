@@ -31,7 +31,7 @@ public class AppleProjectile extends Projectile{
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox());
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
-                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-5);
+                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
                     entityiterator.xSpeed += direction=="right"?10:-10;
                     entityiterator.ySpeed -= 5;
                     deathTicks = tickCount+1;

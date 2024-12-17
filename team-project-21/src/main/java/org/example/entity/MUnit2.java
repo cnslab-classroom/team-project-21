@@ -55,7 +55,7 @@ public class MUnit2 extends LivingEntity {
         }
     }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(22 * gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(20 * gp.tileSize), getHeight()*gp.tileSize, 4*gp.tileSize);
     }
     public int getCost(){
         return 10;

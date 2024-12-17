@@ -18,27 +18,29 @@ public class ArchBullet extends Projectile{
     }
     @Override
     public float getWidth(){
-        return 0.25f;
+        return (tickCount<=deathTicks-1) ? 0.25f : 2;
     }
     @Override
     public float getHeight(){
-        return 0.25f;
+        return (tickCount<=deathTicks-1) ? 0.25f : 2;
     }
     @Override
     public void update(){
         super.update();
-        if(!isHit){
+        if(!isHit&&isOnGround()){
+            deathTicks=tickCount+1;
+            isHit = true;
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize));
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
-                    //entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-10);
+                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
                     //entityiterator.xSpeed += direction=="right"?2:-2;
                     //entityiterator.ySpeed -= 1;
-                    deathTicks=tickCount;
-                    isHit = true;
-                    break;
                 }
             }
+        }
+        if(tickCount>deathTicks-1) {
+            setImage("/textures/entities/apple_explode.png");
         }
         if(tickCount>deathTicks) gp.removeP(this);
     }

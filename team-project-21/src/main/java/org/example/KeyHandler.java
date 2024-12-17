@@ -23,7 +23,7 @@ public class KeyHandler implements KeyListener {
             case KeyEvent.VK_SPACE -> spacePressed = true;
             default -> {
                 // 숫자 키 (1~9) 처리
-                if (code >= KeyEvent.VK_1 && code <= KeyEvent.VK_9) {
+                if (code >= KeyEvent.VK_0 && code <= KeyEvent.VK_9) {
                     int keyIndex = code - KeyEvent.VK_0; // 숫자 키 인덱스 (1~9)
                     if (!numberKeys[keyIndex]) { // 처음 눌렀을 때만 처리
                         numberKeys[keyIndex] = true;
@@ -58,7 +58,7 @@ public class KeyHandler implements KeyListener {
     * @return true면 한 번 실행됨
     */
     public boolean isNumberKeyJustPressed(int keyIndex) {
-        if (keyIndex < 1 || keyIndex > 9) return false; // 범위 초과 방지
+        if (keyIndex < 0 || keyIndex > 9) return false; // 범위 초과 방지
         if (keyJustPressed[keyIndex]) {
             keyJustPressed[keyIndex] = false; // 처리 후 초기화
             return true;

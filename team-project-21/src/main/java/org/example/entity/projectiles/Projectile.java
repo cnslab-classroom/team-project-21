@@ -6,11 +6,12 @@ import org.example.entity.LivingEntity;
 
 public abstract class Projectile extends Entity{
     public LivingEntity Owner;
-    public int speed;
+    public int speed, damage;
     public boolean isHit;
     public Projectile(GamePanel gp, int x, int y, LivingEntity Owner, int speed){
         super(gp,x,y);
         this.Owner = Owner;
+        z= Owner.z;
         direction = Owner.direction;
         this.speed = speed;
         this.isHit = false;

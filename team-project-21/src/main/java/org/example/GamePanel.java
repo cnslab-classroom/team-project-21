@@ -98,11 +98,29 @@ public class GamePanel extends JPanel implements Runnable {
             if (currentTime >= nextLogicUpdateTime) {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
-                if(keyH.upPressed){
+                if(keyH.isNumberKeyJustPressed(1)){
+                    entities.add(new GunMan(this, 100, 100, "player"));
+                } else if(keyH.isNumberKeyJustPressed(2)){
+                    entities.add(new MUnit2(this, 100, 100, "player"));
+                } else if(keyH.isNumberKeyJustPressed(3)){
+                    entities.add(new BUnit1(this, 100, 100, "player"));
+                } else if(keyH.isNumberKeyJustPressed(4)){
+                    entities.add(new BUnit2(this, 100, 100, "player"));
+                } else if(keyH.isNumberKeyJustPressed(5)){
+                    entities.add(new GunMan(this, 1700, 100, "enemy"));
+                } else if(keyH.isNumberKeyJustPressed(6)){
+                    entities.add(new MUnit2(this, 1700, 100, "enemy"));
+                } else if(keyH.isNumberKeyJustPressed(7)){
+                    entities.add(new BUnit1(this, 1700, 100, "enemy"));
+                } else if(keyH.isNumberKeyJustPressed(8)){
+                    entities.add(new BUnit2(this, 1700, 100, "enemy"));
+                }
+                /*if(keyH.upPressed){
                     entities.add(new MUnit2(this, 100, 100, "player"));
                 }else if(keyH.downPressed){
                     entities.add(new BUnit2(this, 1700, 100, "enemy"));
-                }else if(keyH.rightPressed){
+                }else */
+                if(keyH.rightPressed){
                     actualX-=speed;
                 }else if(keyH.leftPressed){
                     actualX+=speed;
@@ -187,12 +205,24 @@ public class GamePanel extends JPanel implements Runnable {
         Graphics2D g2 = (Graphics2D) g;
         //player.draw(g2);
         g2.drawImage(getImage("/textures/tiles/background.png"),0,-96,screenWidth,screenHeight,null);
+        List<Entity> allEntities = new CopyOnWriteArrayList<>(entities); // 원본 리스트 안전하게 복사
+        allEntities.addAll(projectile_entities); // projectile_entities도 포함
+    
+        // z 값 기준으로 정렬 (z값이 작은 엔티티가 뒤쪽에 그려지도록)
+        allEntities.sort(Comparator.comparingInt(Entity::getZ));
+    
+        // 정렬된 순서로 그리기
+        for (Entity e : allEntities) {
+            e.draw(g2);
+        }
+        /*
         for(Entity e:entities){
             e.draw(g2);
         }
         for(Entity e:projectile_entities){
             e.draw(g2);
         }
+        */
 
         g2.dispose();
     }

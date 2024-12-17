@@ -27,10 +27,10 @@ public class BigBullet extends Projectile{
     public void update(){
         super.update();
         if(!isHit){
-            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize));
+            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize / 2));
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
-                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-15);
+                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
                     //entityiterator.xSpeed += direction=="right"?2:-2;
                     //entityiterator.ySpeed -= 1;
                     deathTicks=tickCount;

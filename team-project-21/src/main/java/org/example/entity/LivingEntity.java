@@ -7,6 +7,7 @@ import org.example.utils.Mth;
 
 import java.awt.geom.AffineTransform;
 import java.util.List;
+import java.util.Random;
 
 public abstract class LivingEntity extends Entity{
     private int currentHealth, attackDamage, deathTicks;
@@ -14,9 +15,12 @@ public abstract class LivingEntity extends Entity{
     private String team;
     public byte state;
     public HitBox detectRange;
+    public LivingEntity target;
     
     public LivingEntity(GamePanel gp, int x, int y, String team){
         super(gp, x, y);
+        Random random = new Random();
+        z = -random.nextInt(100) + 1;
         this.team = team;
         this.state = 1;
         defaultDeathAnimation = true;
@@ -29,7 +33,7 @@ public abstract class LivingEntity extends Entity{
     }
 
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(getWidth()*gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(getWidth() * gp.tileSize * 2), (int)(getHeight() * gp.tileSize), (int)(getHeight() * gp.tileSize));
     }
 
     public int getCost(){
@@ -37,9 +41,13 @@ public abstract class LivingEntity extends Entity{
     }
     public void updateDetectRange() {
         // 히트박스를 현재 위치로 동기화
+        /*
         int err = direction == "right" ? (int)(getWidth()*gp.tileSize)*2 : -(int)(getWidth()*gp.tileSize)*2;
         detectRange.setX(x + err);
+        */
+        detectRange.setX(x);
         detectRange.setY(y);
+        detectRange.setZ(z);
     }
     @Override
     public void update(){
@@ -51,13 +59,20 @@ public abstract class LivingEntity extends Entity{
                 List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
                 targetFound = false;
                 for(LivingEntity entityiterator : _entfound){
-                    if(this!=entityiterator&&this.getTeam()!=entityiterator.getTeam()){
+                    if(this!=entityiterator&&entityiterator.isAlive()&&this.getTeam()!=entityiterator.getTeam()){
                         targetFound = true;
+                        target = entityiterator;
                         state = 2;
+                        this.direction = (entityiterator.x > this.x) ? "right" : "left";
                         break;
                     }
                 }
-                if(!targetFound) { state = 1; }
+                if(!targetFound) {
+                    this.direction = this.team == "player" ? "right" : "left";
+                    state = 1; 
+                } else {
+                    this.direction = (target.x > this.x) ? "right" : "left";
+                }
             }
         }
         else{
@@ -106,19 +121,23 @@ public abstract class LivingEntity extends Entity{
     public void setAttackDamage(int attackDamage) {
         this.attackDamage = attackDamage;
     }
+    protected int getMaxDeathTicks(){
+        return 10;
+    }
     @Override
     public void drawMethod(Graphics2D g2){
         if (isAlive()) {
             super.drawMethod(g2);
         } else if(defaultDeathAnimation){
             AffineTransform originalTransform = g2.getTransform();
+            double scale = 1.0 / Math.sqrt(Math.max(1, z));
             // Calculate position and rotation anchor
             int drawX = Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress);
-            int drawY = Mth.lerp(gp.prevActualY + prevY, gp.actualY + y, gp.lerpProgress) - (int) (getHeight() * gp.tileSize);
-            int width = (int) (getWidth() * gp.tileSize);
-            int height = (int) (getHeight() * gp.tileSize);
+            int drawY = Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z, gp.lerpProgress) - (int) (getHeight() * gp.tileSize);
+            int width = (int) (getWidth() * gp.tileSize * scale);
+            int height = (int) (getHeight() * gp.tileSize * scale);
 
-            if (!isAlive() && deathTicks <= 10) {
+            if (!isAlive() && deathTicks <= getMaxDeathTicks()) {
                 // Rotation logic for death
                 double rotationAngle = direction.equals("right") ? Math.toRadians((deathTicks+gp.lerpProgress)*8) : Math.toRadians(-(deathTicks+gp.lerpProgress)*8);
                 double pivotX = direction.equals("right") ? drawX - width / 2 : drawX + width / 2; // Pivot at the bottom-center

@@ -14,6 +14,7 @@ public class BUnit1 extends LivingEntity {
 
     public BUnit1(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
+        setAttackDamage(15);
         moveSprites[0] = getImage("/textures/entities/gun_mecha/b_unit1_walk1.png");
         moveSprites[1] = getImage("/textures/entities/gun_mecha/b_unit1_walk2.png");
         moveSprites[2] = getImage("/textures/entities/gun_mecha/b_unit1_walk3.png");
@@ -69,7 +70,7 @@ public class BUnit1 extends LivingEntity {
         }
     }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(8 * gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(10 * gp.tileSize), getHeight()*gp.tileSize, 6*gp.tileSize);
     }
     public int getCost(){
         return 10;

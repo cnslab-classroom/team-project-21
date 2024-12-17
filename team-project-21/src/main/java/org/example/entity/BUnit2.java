@@ -4,7 +4,6 @@ import java.awt.image.BufferedImage;
 
 import org.example.GamePanel;
 import org.example.entity.projectiles.ArchBullet;
-import org.example.entity.projectiles.BigBullet;
 
 public class BUnit2 extends LivingEntity{
     int attackTicks;
@@ -16,6 +15,7 @@ public class BUnit2 extends LivingEntity{
 
     public BUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
+        setAttackDamage(20);
         moveSprites[0] = getImage("/textures/entities/big_unit2/unit4_move-1.png");
         moveSprites[1] = getImage("/textures/entities/big_unit2/unit4_move-2.png");
         moveSprites[2] = getImage("/textures/entities/big_unit2/unit4_move-3.png");
@@ -49,7 +49,9 @@ public class BUnit2 extends LivingEntity{
     public float getHeight(){
         return 2;
     }
-
+    public int getMovementSpeed(){
+        return 16;
+    }
     public void update(){
         prevState = state;
         super.update();
@@ -67,15 +69,19 @@ public class BUnit2 extends LivingEntity{
                 if(ticks<5){
                     sprite = attackSprites[ticks];
                     if(ticks == 1)
-                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 40, 15));
+                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, this, 40, 80));
                 }else{
                     sprite = attackSprites[0];
                 }
             }
         }
     }
+    public void travel(){
+        if(tickCount % 8 == 3 || tickCount % 8 == 7)
+            super.travel();
+    }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(18 * gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(24 * gp.tileSize), getHeight()*gp.tileSize, 6*gp.tileSize);
     }
     public int getCost(){
         return 10;

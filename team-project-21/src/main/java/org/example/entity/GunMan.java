@@ -13,6 +13,7 @@ public class GunMan extends LivingEntity{
 
     public GunMan(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
+        setAttackDamage(2);
         moveSprites[0] = getImage("/textures/entities/gun_man/gun_man_idle.png");
         moveSprites[1] = getImage("/textures/entities/gun_man/gun_man_move1.png");
         moveSprites[2] = getImage("/textures/entities/gun_man/gun_man_idle.png");
@@ -45,7 +46,7 @@ public class GunMan extends LivingEntity{
         }
     }
     public HitBox createDetectRange() {
-        return new HitBox(x, y, 0, (int)(15*gp.tileSize), getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(17*gp.tileSize), getHeight()*gp.tileSize, getHeight()*gp.tileSize);
     }
     public int getCost(){
         return 10;

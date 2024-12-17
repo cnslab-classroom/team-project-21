@@ -11,8 +11,8 @@ import javax.imageio.ImageIO;
 
 public abstract class Entity {
     public GamePanel gp;
-    public int x,prevX,y,prevY,screenX,screenY;
-    public int xSpeed, ySpeed;
+    public int x,prevX,y,prevY,z,prevZ,screenX,screenY;
+    public int xSpeed, ySpeed, zSpeed;
     public int tickCount = 0;
     public BufferedImage sprite;
     public String direction;
@@ -21,18 +21,22 @@ public abstract class Entity {
     public boolean noCulling, hasGravity;
     private HitBox hitbox;
 
+    public int getZ(){
+        return z;
+    }
+
 
     public Entity(GamePanel gp, int x, int y){
         this.gp = gp;
         noCulling = false;
         hasGravity = true;
-        xSpeed = ySpeed = 0;
+        xSpeed = ySpeed = zSpeed = 0;
         direction = "right";
         locate(x, y);
         this.hitbox = createHitbox();
     }
     public HitBox createHitbox() {
-        return new HitBox(x, y, 0, getWidth()*gp.tileSize, getHeight()*gp.tileSize, getWidth()*gp.tileSize);
+        return new HitBox(x, y, z, (int)(getWidth() * gp.tileSize), (int)(getHeight() * gp.tileSize), (int)(getHeight() * gp.tileSize));
     }
     public HitBox getHitbox() {
         return hitbox;
@@ -42,6 +46,7 @@ public abstract class Entity {
         // 히트박스를 현재 위치로 동기화
         hitbox.setX(x);
         hitbox.setY(y);
+        hitbox.setZ(z);
     }
 
     public void setHitbox(HitBox hitbox) {
@@ -66,7 +71,7 @@ public abstract class Entity {
         }
     }
     public void update(){
-        prevX = x; prevY = y;
+        prevX = x; prevY = y; prevZ = z;
         tickCount++;
         if(hasGravity && !isOnGround()){
             ySpeed += getGravitySpeed();
@@ -98,13 +103,18 @@ public abstract class Entity {
         this.x += vectorX;
         this.y += vectorY;
         if(isOnGround()){
-            y = 400;
+            y = 450;
             ySpeed = 0;
             xSpeed *= 0.5;
+            zSpeed *= 0.5;
         }
     }
+    public void push(int vectorX, int vectorY, int vectorZ){
+        this.z += vectorZ;
+        push(vectorX, vectorY);
+    }
     public boolean isOnGround(){
-        return y>=400;
+        return y>=450;
     }
     
     
@@ -130,15 +140,34 @@ public abstract class Entity {
     }
     protected void drawMethod(Graphics2D g2){
         BufferedImage image = sprite;
+        // 원근법에 따라 z 값 기반 스케일 계산
+        double scale = 1; // z가 0인 경우를 방지
+        int scaledWidth = (int) (getWidth() * gp.tileSize * scale);
+        int scaledHeight = (int) (getHeight() * gp.tileSize * scale);
+
+        // 좌표 계산 (정중앙 배치를 위해 크기의 절반을 빼줌)
+        int drawX = (int) Mth.lerp(gp.prevActualX + prevX, gp.actualX + x, gp.lerpProgress) - scaledWidth / 2;
+        int drawY = (int) Mth.lerp(gp.prevActualY + prevY + prevZ, gp.actualY + y + z, gp.lerpProgress) - scaledHeight;
+
+        if (direction.equals("right")) {
+            g2.drawImage(image, drawX, drawY, scaledWidth, scaledHeight, null);
+        } else if (direction.equals("left")) {
+            g2.drawImage(image, drawX + scaledWidth, drawY, -scaledWidth, scaledHeight, null); // 좌우 반전
+        }
+        /*
+        double scale = 1.0 / Math.sqrt(Math.max(1, z));
         if(direction == "right")
             g2.drawImage(image,
             Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) - (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
-            ,Mth.lerp(gp.prevActualY+prevY,gp.actualY+y,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
-            ,(int)(getWidth()*gp.tileSize),(int)(getHeight()*gp.tileSize),null);
+            ,Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
+            ,(int)(getWidth()*gp.tileSize * scale)
+            ,(int)(getHeight()*gp.tileSize * scale),null);
         else if(direction == "left")
             g2.drawImage(image,
             Mth.lerp(gp.prevActualX+prevX,gp.actualX+x,gp.lerpProgress) + (int)(getWidth()*gp.tileSize*0.5)//스프라이트가 딱 정중앙에 오게끔 하기 위해 크기의 절반을 빼준다.
-            ,Mth.lerp(gp.prevActualY+prevY,gp.actualY+y,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
-            ,-(int)(getWidth()*gp.tileSize),(int)(getHeight()*gp.tileSize),null);
+            ,Mth.lerp(gp.prevActualY+prevY+prevZ,gp.actualY+y+z,gp.lerpProgress) - (int)(getHeight()*gp.tileSize)
+            ,-(int)(getWidth()*gp.tileSize * scale)
+            ,(int)(getHeight()*gp.tileSize * scale),null);
+        */
     }
 }
