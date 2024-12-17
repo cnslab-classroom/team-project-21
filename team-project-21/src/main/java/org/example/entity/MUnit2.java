@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 
 import org.example.GamePanel;
 import org.example.entity.projectiles.AntiairBullet;
+import org.example.entity.projectiles.ArchBullet;
 
 public class MUnit2 extends LivingEntity {
     int attackTicks;
@@ -30,7 +31,16 @@ public class MUnit2 extends LivingEntity {
     public float getHeight(){
         return 1.5f;
     }
-
+    public void tickDeath(){
+        gp.addFreshEntityP(new ArchBullet(gp, x, y, z, this, 0, 2));
+        Dummy rider = new Dummy(gp, x, y - (int) getHeight() * gp.tileSize, z);
+        rider.direction = this.direction;
+        rider.xSpeed = this.direction == "right" ? -20 : 20;
+        rider.ySpeed = -40;
+        rider.setCurrentHealth(0);
+        gp.addFreshEntity(rider);
+        gp.remove(this);
+    }
     public void update(){
         prevState = state;
         super.update();

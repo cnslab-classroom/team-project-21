@@ -74,7 +74,6 @@ public class GamePanel extends JPanel implements Runnable {
     public void startGameThread(){
         entities.add(new CommandCenter(this, 100, 100, "player"));
         entities.add(new CommandCenter(this, 1700, 100, "enemy"));
-        entities.add(new Dummy(this, 700, 100));
         gameThread = new Thread(this);
         gameThread.start();
     }

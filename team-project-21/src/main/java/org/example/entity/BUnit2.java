@@ -69,8 +69,10 @@ public class BUnit2 extends LivingEntity{
                 
                 if(ticks<5){
                     sprite = attackSprites[ticks];
-                    if(ticks == 1)
-                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                    if(ticks == 1){
+                        gp.playSound("/sounds/sf/cannon_shoot.wav");
+                        gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                    }
                 }else{
                     sprite = attackSprites[0];
                 }

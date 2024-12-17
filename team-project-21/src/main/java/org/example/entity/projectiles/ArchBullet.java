@@ -29,6 +29,7 @@ public class ArchBullet extends Projectile{
         super.update();
         if(!isHit&&isOnGround()){
             deathTicks=tickCount+1;
+            gp.playSound("/sounds/sf/cannon_explode.wav");
             isHit = true;
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize));
             for(LivingEntity entityiterator : _entfound){

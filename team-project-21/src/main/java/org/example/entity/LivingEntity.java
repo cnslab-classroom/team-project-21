@@ -15,6 +15,20 @@ public abstract class LivingEntity extends Entity{
     public byte state;
     public HitBox detectRange;
     public LivingEntity target;
+
+    public LivingEntity(GamePanel gp, int x, int y, int z, String team){
+        super(gp, x, y, z);
+        this.team = team;
+        this.state = 1;
+        defaultDeathAnimation = true;
+        if ("player".equals(team)) {
+            direction = "right";
+        } else {
+            direction = "left";
+        }
+        setCurrentHealth(getMaxHealth());
+        detectRange = createDetectRange();
+    }
     
     public LivingEntity(GamePanel gp, int x, int y, String team){
         super(gp, x, y, -random.nextInt(100)-1);
