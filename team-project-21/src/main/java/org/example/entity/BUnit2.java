@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import org.example.GamePanel;
 import org.example.entity.projectiles.ArchBullet;
@@ -16,6 +17,7 @@ public class BUnit2 extends LivingEntity{
     public BUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         setAttackDamage(7);
+        defaultDeathAnimation = false;
         moveSprites[0] = getImage("/textures/entities/big_unit2/unit4_move-1.png");
         moveSprites[1] = getImage("/textures/entities/big_unit2/unit4_move-2.png");
         moveSprites[2] = getImage("/textures/entities/big_unit2/unit4_move-3.png");
@@ -52,9 +54,9 @@ public class BUnit2 extends LivingEntity{
     public int getMovementSpeed(){
         return 16;
     }
-    public void update(){
+    public void tickLiving(){
         prevState = state;
-        super.update();
+        super.tickLiving();
         if(state == 2&&prevState!=2){
             attackTicks = tickCount;
         }
@@ -64,6 +66,16 @@ public class BUnit2 extends LivingEntity{
                 sprite = moveSprites[tickCount%8];
             }
             case 2 -> {
+                int ticks = (tickCount-attackTicks)%5; // 4초
+                
+                if(ticks<4){
+                    sprite = readySprites[ticks];
+                } else{
+                    state = 3;
+                    attackTicks = tickCount;
+                }
+            }
+            case 3 -> {
                 int ticks = (tickCount-attackTicks)%60; // 4초
                 
                 if(ticks<5){
@@ -76,7 +88,50 @@ public class BUnit2 extends LivingEntity{
                     sprite = attackSprites[0];
                 }
             }
+            case 4 -> {
+                int ticks = (tickCount-attackTicks)%5; // 4초
+                
+                if(ticks<4){
+                    sprite = readySprites[3 - ticks];
+                } else{
+                    state = 1;
+                }
+            }
         }
+    }
+        public void findTarget(){
+        updateDetectRange();
+            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
+            targetFound = false;
+            for(LivingEntity entityiterator : _entfound){
+                if(this!=entityiterator&&entityiterator.isAlive()&&this.getTeam()!=entityiterator.getTeam()){
+                    targetFound = true;
+                    target = entityiterator;
+                    state = (state == 3) ? (byte) 3 : 2;
+                    this.direction = (entityiterator.x > this.x) ? "right" : "left";
+                    break;
+                }
+            }
+            if(!targetFound) {
+                this.direction = this.getTeam() == "player" ? "right" : "left";
+                state = (state == 3) ? (byte) 4 : 1;
+                if(state == 4)
+                    attackTicks = tickCount;
+            } else {
+                this.direction = (target.x > this.x) ? "right" : "left";
+            }
+    }
+    public void tickDeath(){
+        sprite = dyingSprites[4];
+        if(deathTicks > getMaxDeathTicks() - 1){
+            setAttackDamage(0);
+            gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2));
+            gp.remove(this);
+        }
+        super.tickDeath();
+    }
+    public int getMaxDeathTicks(){
+        return 12;
     }
     public void travel(){
         int mod = tickCount & 7; // % 8 대신 비트 연산

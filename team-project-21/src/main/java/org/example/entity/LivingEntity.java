@@ -74,7 +74,11 @@ public abstract class LivingEntity extends Entity{
     public void tickLiving(){
         travel();
         if(tickCount%10==5){
-            updateDetectRange();
+            findTarget();
+        }
+    }
+    public void findTarget(){
+        updateDetectRange();
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
             targetFound = false;
             for(LivingEntity entityiterator : _entfound){
@@ -92,7 +96,6 @@ public abstract class LivingEntity extends Entity{
             } else {
                 this.direction = (target.x > this.x) ? "right" : "left";
             }
-        }
     }
     public void tickDeath(){
         deathTicks++;

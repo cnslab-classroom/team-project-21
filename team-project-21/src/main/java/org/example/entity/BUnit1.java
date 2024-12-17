@@ -29,13 +29,11 @@ public class BUnit1 extends LivingEntity {
         attackSprites[7] = getImage("/textures/entities/gun_mecha/b_unit1_atk8.png");
         attackSprites[8] = getImage("/textures/entities/gun_mecha/b_unit1_atk9.png");
         attackSprites[9] = getImage("/textures/entities/gun_mecha/b_unit1_atk10.png");
-        /*
-        dyingSprites[0] = getImage("/textures/entities/gun_mecha_b_unit1_die1");
-        dyingSprites[1] = getImage("/textures/entities/gun_mecha_b_unit1_die2");
-        dyingSprites[2] = getImage("/textures/entities/gun_mecha_b_unit1_die3");
-        dyingSprites[3] = getImage("/textures/entities/gun_mecha_b_unit1_die4");
-        dyingSprites[4] = getImage("/textures/entities/gun_mecha_b_unit1_die5");
-        */
+        dyingSprites[0] = getImage("/textures/entities/gun_mecha/b_unit1_die1.png");
+        dyingSprites[1] = getImage("/textures/entities/gun_mecha/b_unit1_die2.png");
+        dyingSprites[2] = getImage("/textures/entities/gun_mecha/b_unit1_die3.png");
+        dyingSprites[3] = getImage("/textures/entities/gun_mecha/b_unit1_die4.png");
+        dyingSprites[4] = getImage("/textures/entities/gun_mecha/b_unit1_die5.png");
     }
 
     @Override
@@ -47,9 +45,9 @@ public class BUnit1 extends LivingEntity {
         return 2;
     }
 
-    public void update(){
+    public void tickLiving(){
         prevState = state;
-        super.update();
+        super.tickLiving();
         if(state == 2&&prevState!=2)
             attackTicks = tickCount;
         switch (state) {
