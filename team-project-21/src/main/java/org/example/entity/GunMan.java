@@ -33,12 +33,15 @@ public class GunMan extends LivingEntity{
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%5; // 0.33초
+                int ticks = (tickCount-attackTicks)%20; // 0.33초
                 
-                if(ticks<2){
-                    sprite = attackSprites[ticks];
-                    if(ticks == 0)
-                    gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 60, 10));
+                if(ticks<6){
+                    int t2 = ticks%2;
+                    sprite = attackSprites[t2];
+                    if(t2 == 0){
+                        gp.playSound("/sounds/sf/gun_man_shoot.wav");
+                        gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 60, 10));
+                    }
                 }else{
                     sprite = moveSprites[0];
                 }

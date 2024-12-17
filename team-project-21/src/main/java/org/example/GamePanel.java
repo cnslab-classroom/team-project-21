@@ -8,7 +8,6 @@ import org.example.entity.Entity;
 import org.example.entity.GunMan;
 import org.example.entity.HitBox;
 import org.example.entity.MUnit2;
-import org.example.entity.Player;
 import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
 
@@ -18,6 +17,11 @@ import java.util.LinkedList;
 import java.util.List;
 import javax.sound.sampled.*; // Java Sound API
 import java.util.Queue;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.File;
+import java.net.URISyntaxException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,6 +38,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;//768
     public final int screenHeight = tileSize * maxScreenRow;//576
+    private final Map<String, Clip> soundCache = new HashMap<>();
+
 
     // 최대 동시에 재생할 수 있는 음향 효과 개수
     private static final int MAX_SOUNDS = 30;
@@ -62,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
         setDoubleBuffered(true);
         addKeyListener(keyH);
         setFocusable(true);
-
+        loadSoundsFromFolder("/sounds/sf");
     }
 
     public void startGameThread(){
@@ -71,6 +77,44 @@ public class GamePanel extends JPanel implements Runnable {
         entities.add(new Dummy(this, 700, 100));
         gameThread = new Thread(this);
         gameThread.start();
+    }
+
+    private void loadSoundsFromFolder(String folderPath) {
+        try {
+            // 폴더 경로를 가져옴
+            File folder = new File(Objects.requireNonNull(getClass().getResource(folderPath)).toURI());
+    
+            // 폴더 내 모든 파일 탐색
+            for (File file : Objects.requireNonNull(folder.listFiles())) {
+                if (file.isFile() && isValidSoundFile(file.getName())) {
+                    String soundPath = folderPath + "/" + file.getName();
+                    loadSound(soundPath); // 음향 로딩 메서드 호출
+                }
+            }
+        } catch (URISyntaxException e) {
+            System.err.println("리소스 폴더 경로를 찾을 수 없습니다: " + folderPath);
+            e.printStackTrace();
+        }
+    }
+
+    private void loadSound(String soundPath) {
+        try {
+            if (!soundCache.containsKey(soundPath)) {
+                AudioInputStream audioStream = AudioSystem.getAudioInputStream(getClass().getResource(soundPath));
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioStream);
+                soundCache.put(soundPath, clip);
+                System.out.println("Loaded sound: " + soundPath);
+            }
+        } catch (Exception e) {
+            System.err.println("음향 파일 로딩 실패: " + soundPath);
+            e.printStackTrace();
+        }
+    }
+    
+    private boolean isValidSoundFile(String fileName) {
+        // 유효한 음향 파일 확장자 필터링
+        return fileName.endsWith(".wav") || fileName.endsWith(".mp3") || fileName.endsWith(".ogg");
     }
     
 

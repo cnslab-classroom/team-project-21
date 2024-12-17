@@ -51,30 +51,33 @@ public abstract class LivingEntity extends Entity{
     public void update(){
         super.update();
         if(isAlive()){
-            travel();
-            if(tickCount%10==5){
-                updateDetectRange();
-                List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
-                targetFound = false;
-                for(LivingEntity entityiterator : _entfound){
-                    if(this!=entityiterator&&entityiterator.isAlive()&&this.getTeam()!=entityiterator.getTeam()){
-                        targetFound = true;
-                        target = entityiterator;
-                        state = 2;
-                        this.direction = (entityiterator.x > this.x) ? "right" : "left";
-                        break;
-                    }
-                }
-                if(!targetFound) {
-                    this.direction = this.team == "player" ? "right" : "left";
-                    state = 1; 
-                } else {
-                    this.direction = (target.x > this.x) ? "right" : "left";
-                }
-            }
+            tickLiving();
         }
         else{
             tickDeath();
+        }
+    }
+    public void tickLiving(){
+        travel();
+        if(tickCount%10==5){
+            updateDetectRange();
+            List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, detectRange);
+            targetFound = false;
+            for(LivingEntity entityiterator : _entfound){
+                if(this!=entityiterator&&entityiterator.isAlive()&&this.getTeam()!=entityiterator.getTeam()){
+                    targetFound = true;
+                    target = entityiterator;
+                    state = 2;
+                    this.direction = (entityiterator.x > this.x) ? "right" : "left";
+                    break;
+                }
+            }
+            if(!targetFound) {
+                this.direction = this.team == "player" ? "right" : "left";
+                state = 1; 
+            } else {
+                this.direction = (target.x > this.x) ? "right" : "left";
+            }
         }
     }
     public void tickDeath(){
