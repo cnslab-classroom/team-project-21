@@ -32,14 +32,17 @@ public class MUnit2 extends LivingEntity {
         return 1.5f;
     }
     public void tickDeath(){
-        gp.addFreshEntityP(new ArchBullet(gp, x, y, z, this, 0, 2));
-        Dummy rider = new Dummy(gp, x, y - (int) getHeight() * gp.tileSize, z);
-        rider.direction = this.direction;
-        rider.xSpeed = this.direction == "right" ? -20 : 20;
-        rider.ySpeed = -40;
-        rider.setCurrentHealth(0);
-        gp.addFreshEntity(rider);
-        gp.remove(this);
+        if(deathTicks > getMaxDeathTicks() - 2){
+            gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2));
+            Dummy rider = new Dummy(gp, x, y - (int) getHeight() * gp.tileSize, z);
+            rider.direction = this.direction;
+            rider.xSpeed = this.direction == "right" ? -20 : 20;
+            rider.ySpeed = -40;
+            rider.setCurrentHealth(0);
+            gp.addFreshEntity(rider);
+            gp.remove(this);
+        }
+        super.tickDeath();
     }
     public void update(){
         prevState = state;
