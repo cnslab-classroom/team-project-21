@@ -3,11 +3,11 @@ package org.example;
 import org.example.entity.BUnit1;
 import org.example.entity.BUnit2;
 import org.example.entity.CommandCenter;
-import org.example.entity.Dummy;
 import org.example.entity.Entity;
 import org.example.entity.GunMan;
 import org.example.entity.HitBox;
 import org.example.entity.MUnit2;
+import org.example.entity.SUnit2;
 import org.example.entity.projectiles.Projectile;
 import org.example.tile.TileManager;
 
@@ -175,7 +175,7 @@ public class GamePanel extends JPanel implements Runnable {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
                 if(keyH.isNumberKeyJustPressed(1)){
-                    entities.add(new GunMan(this, 100, 400, "player"));
+                    entities.add(new SUnit2(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(2)){
                     entities.add(new MUnit2(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(3)){

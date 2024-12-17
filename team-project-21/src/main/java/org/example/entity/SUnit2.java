@@ -39,8 +39,14 @@ public class SUnit2 extends LivingEntity{
                 
                 if(ticks<4){
                     sprite = attackSprites[ticks];
-                    if(ticks == 0)
-                    gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 16, 2));
+                    if(ticks == 2){
+                        gp.playSound("/sounds/sf/shield_man_attack.wav");
+                        gp.addFreshEntityP(new Bullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, 16, 2){
+                            public boolean canRender(){
+                                return false;
+                            }
+                        });
+                    }
                 }else{
                     sprite = moveSprites[0];
                 }
