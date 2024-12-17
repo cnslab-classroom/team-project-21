@@ -62,8 +62,15 @@ public class GamePanel extends JPanel implements Runnable {
     private final int LOGIC_FPS = 15;
     public int actualX=0, actualY=0, prevActualX=0,prevActualY=0;
 
-    private int money;
-    private int get_money;
+    private int player_money;
+    private int player_get_money;
+    private int enemy_money;
+    private int enemy_get_money;
+
+    private double summon_period;
+    private double summon_interval;
+    private int enemy_rotation;
+
     private double money_interval;
     private double next_money;
 
@@ -199,8 +206,17 @@ public class GamePanel extends JPanel implements Runnable {
 
         previousRenderTime = System.nanoTime();
 
-        money = 100;
-        get_money = 10;
+        player_money = 100;
+        enemy_money = 100;
+
+        player_get_money = 10;
+        enemy_get_money = 10;
+
+        summon_interval = logicInterval * 4;
+        summon_period = System.nanoTime() + summon_interval;
+
+        enemy_rotation = 1;
+
         money_interval = logicInterval * 4;
         next_money = System.nanoTime() + money_interval;
 
@@ -220,21 +236,21 @@ public class GamePanel extends JPanel implements Runnable {
                 if (currentTime >= nextLogicUpdateTime) {
                     prevActualX = actualX; prevActualY = actualY;
                     update();
-                    if(keyH.isNumberKeyJustPressed(1) && money >= GunMan.getCost()){
+                    if(keyH.isNumberKeyJustPressed(1) && player_money >= GunMan.getCost()){
                         entities.add(new GunMan(this, 100, 400, "player"));
-                        money -= GunMan.getCost();
-                    } else if(keyH.isNumberKeyJustPressed(2) && money >= SUnit2.getCost()){
+                        player_money -= GunMan.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(2) && player_money >= SUnit2.getCost()){
                         entities.add(new SUnit2(this, 100, 400, "player"));
-                        money -= SUnit2.getCost();
-                    } else if(keyH.isNumberKeyJustPressed(3) && money >= MUnit2.getCost()){
+                        player_money -= SUnit2.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(3) && player_money >= MUnit2.getCost()){
                         entities.add(new MUnit2(this, 100, 400, "player"));
-                        money -= MUnit2.getCost();
-                    } else if(keyH.isNumberKeyJustPressed(4) && money >= BUnit1.getCost()){
+                        player_money -= MUnit2.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(4) && player_money >= BUnit1.getCost()){
                         entities.add(new BUnit1(this, 100, 400, "player"));
-                        money -= BUnit1.getCost();
-                    } else if(keyH.isNumberKeyJustPressed(5) && money >= BUnit2.getCost()){
+                        player_money -= BUnit1.getCost();
+                    } else if(keyH.isNumberKeyJustPressed(5) && player_money >= BUnit2.getCost()){
                         entities.add(new BUnit2(this, 100, 400, "player"));
-                        money -= BUnit2.getCost();
+                        player_money -= BUnit2.getCost();
                     } /*else if(keyH.isNumberKeyJustPressed(5)){
                         entities.add(new GunMan(this, 1700, 400, "enemy"));
                     } else if(keyH.isNumberKeyJustPressed(6)){
@@ -249,6 +265,7 @@ public class GamePanel extends JPanel implements Runnable {
                     }else if(keyH.downPressed){
                         entities.add(new BUnit2(this, 1700, 100, "enemy"));
                     }else */
+                    
                     if(keyH.rightPressed){
                         actualX-=speed;
                     }else if(keyH.leftPressed){
@@ -256,8 +273,61 @@ public class GamePanel extends JPanel implements Runnable {
                     }
 
                     if(currentTime >= next_money){
-                        money += get_money;
+                        player_money += player_get_money;
+                        enemy_money += enemy_get_money;
                         next_money += money_interval;
+                    }
+
+                    if(currentTime >= summon_period){
+                        if(enemy_rotation == 1 
+                        /*&& enemy_money >= GunMan.getCost()*5 + SUnit2.getCost()*3*/){
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            //enemy_money -= GunMan.getCost()*5 + SUnit2.getCost()*3;
+                            enemy_rotation++;
+                        } else if(enemy_rotation == 2 
+                        /*&& enemy_money >= SUnit2.getCost()*4 + BUnit1.getCost()*3*/){
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new SUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit1(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit1(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit1(this, 1700, 400, "enemy"));
+                            //enemy_money -= SUnit2.getCost()*4 + BUnit1.getCost()*3;
+                            enemy_rotation++;
+                        } else if(enemy_rotation == 3 
+                        /*&& enemy_money >= GunMan.getCost()*5 + MUnit2.getCost()*2*/){
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            entities.add(new MUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new MUnit2(this, 1700, 400, "enemy"));
+                            //enemy_money -= GunMan.getCost()*5 + MUnit2.getCost()*2;
+                            enemy_rotation++;
+                        } else if(enemy_rotation == 4 
+                        /*&& enemy_money >= GunMan.getCost()*/){
+                            entities.add(new BUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit2(this, 1700, 400, "enemy"));
+                            entities.add(new BUnit2(this, 1700, 400, "enemy"));
+                            //enemy_money -= BUnit2.getCost()*4;
+                            enemy_rotation++;
+                        } else if(enemy_rotation == 5 
+                        /*&& enemy_money >= GunMan.getCost()*/){
+                            entities.add(new GunMan(this, 1700, 400, "enemy"));
+                            //enemy_money -= GunMan.getCost();
+                            enemy_rotation = 1;
+                        }
+                        summon_period += summon_interval*30;
                     }
 
                     nextLogicUpdateTime += logicInterval;
@@ -357,7 +427,7 @@ public class GamePanel extends JPanel implements Runnable {
         interfaceX = 0;
         interfaceY = screenHeight - 60;
 
-        g2.drawString("Money = " + money, interfaceX, interfaceY);
+        g2.drawString("Money = " + player_money, interfaceX, interfaceY);
 
         g2.dispose();
     }
