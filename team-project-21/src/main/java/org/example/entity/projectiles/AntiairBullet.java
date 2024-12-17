@@ -31,7 +31,7 @@ public class AntiairBullet extends Projectile{
             List<LivingEntity> _entfound = gp.getEntitiesOfClass(LivingEntity.class, getHitbox().expand(gp.tileSize));
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
-                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-40);
+                    entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
                     //entityiterator.xSpeed += direction=="right"?2:-2;
                     //entityiterator.ySpeed -= 1;
                     deathTicks=tickCount;
