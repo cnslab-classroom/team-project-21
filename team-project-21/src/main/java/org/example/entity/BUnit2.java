@@ -45,11 +45,11 @@ public class BUnit2 extends LivingEntity{
 
     @Override
     public float getWidth(){
-        return 3;
+        return 2;
     }
     @Override
     public float getHeight(){
-        return 3;
+        return 2;
     }
     public int getMovementSpeed(){
         return 16;
@@ -85,7 +85,7 @@ public class BUnit2 extends LivingEntity{
                     sprite = attackSprites[ticks];
                     if(ticks == 1){
                         gp.playSound("/sounds/sf/cannon_shoot.wav");
-                        gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                        gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize * 0.66), z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
                     }
                 }else{
                     sprite = attackSprites[0];

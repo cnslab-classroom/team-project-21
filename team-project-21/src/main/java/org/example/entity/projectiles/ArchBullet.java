@@ -6,7 +6,7 @@ import org.example.GamePanel;
 import org.example.entity.LivingEntity;
 
 public class ArchBullet extends Projectile{
-    int deathTicks;
+    int deathTicks, hitCount;
     public ArchBullet(GamePanel gp, int x, int y, int z, LivingEntity Owner, int speed, int deathTicks){
         super(gp, x, y, z, Owner, speed);
         this.speed = speed;
@@ -15,6 +15,7 @@ public class ArchBullet extends Projectile{
         ySpeed = -speed;
         this.deathTicks = deathTicks;
         hasGravity = true;
+        hitCount = 0;
     }
     @Override
     public float getWidth(){
@@ -35,6 +36,7 @@ public class ArchBullet extends Projectile{
             for(LivingEntity entityiterator : _entfound){
                 if(entityiterator.isAlive()&&Owner.getTeam() != entityiterator.getTeam()){
                     entityiterator.setCurrentHealth(entityiterator.getCurrentHealth()-Owner.getAttackDamage());
+                    if(hitCount++>5) break;
                     //entityiterator.xSpeed += direction=="right"?2:-2;
                     //entityiterator.ySpeed -= 1;
                 }

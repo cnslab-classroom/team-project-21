@@ -15,7 +15,7 @@ public class BUnit1 extends LivingEntity {
 
     public BUnit1(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
-        setAttackDamage(15);
+        setAttackDamage(8);
         defaultDeathAnimation = false;
         moveSprites[0] = getImage("/textures/entities/gun_mecha/b_unit1_walk1.png");
         moveSprites[1] = getImage("/textures/entities/gun_mecha/b_unit1_walk2.png");
@@ -58,12 +58,22 @@ public class BUnit1 extends LivingEntity {
                 sprite = moveSprites[tickCount%4];
             }
             case 2 -> {
-                int ticks = (tickCount-attackTicks)%30; // 2초
+                int ticks = (tickCount-attackTicks)%70; // 2초
                 
-                if(ticks<10){
-                    sprite = attackSprites[ticks];
-                    if(ticks == 2 || ticks == 7)
-                    gp.addFreshEntityP(new BigBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/4, z, this, 100, 8));
+                if(ticks<13){
+                    int t1 = ticks%4;
+                    sprite = attackSprites[t1];
+                    if(t1 == 2){
+                        gp.playSound("/sounds/sf/gun_mecha_shoot.wav");
+                        gp.addFreshEntityP(new BigBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/4, z, this, 100, 8));
+                    }
+                }else if(ticks<19){
+                    sprite = attackSprites[ticks-9];
+                    if(ticks == 16){
+                        gp.playSound("/sounds/sf/cannon_shoot.wav");
+                        int err = "right".equals(direction) ? 30 : -30;
+                        gp.addFreshEntityP(new ArchBullet(gp, x + err, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                    }
                 }else{
                     sprite = moveSprites[0];
                 }
