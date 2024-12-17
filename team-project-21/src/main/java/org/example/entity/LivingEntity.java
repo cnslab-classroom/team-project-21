@@ -20,7 +20,7 @@ public abstract class LivingEntity extends Entity{
     public LivingEntity(GamePanel gp, int x, int y, int z, String team){
         super(gp, x, y, z);
         this.team = team;
-        knockbackResist=1;
+        knockbackResist = 1.0f;
         this.state = 1;
         defaultDeathAnimation = true;
         if ("player".equals(team)) {
@@ -39,6 +39,7 @@ public abstract class LivingEntity extends Entity{
         super(gp, x, y, -random.nextInt(100)-1);
         this.team = team;
         this.state = 1;
+        knockbackResist = 1.0f;
         defaultDeathAnimation = true;
         if ("player".equals(team)) {
             direction = "right";

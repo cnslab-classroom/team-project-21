@@ -15,6 +15,7 @@ public class MUnit2 extends LivingEntity {
     public MUnit2(GamePanel gp, int x, int y, String team){
         super(gp, x, y, team);
         setAttackDamage(40);
+        knockbackResist = 0.3f;
         moveSprites[0] = getImage("/textures/entities/middle_unit2/unit6_move-1.png");
         moveSprites[1] = getImage("/textures/entities/middle_unit2/unit6_move-2.png");
         attackSprites[0] = getImage("/textures/entities/middle_unit2/unit6_atk-1.png");
