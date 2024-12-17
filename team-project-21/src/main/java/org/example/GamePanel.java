@@ -132,21 +132,21 @@ public class GamePanel extends JPanel implements Runnable {
                 prevActualX = actualX; prevActualY = actualY;
                 update();
                 if(keyH.isNumberKeyJustPressed(1)){
-                    entities.add(new GunMan(this, 100, 100, "player"));
+                    entities.add(new GunMan(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(2)){
-                    entities.add(new MUnit2(this, 100, 100, "player"));
+                    entities.add(new MUnit2(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(3)){
-                    entities.add(new BUnit1(this, 100, 100, "player"));
+                    entities.add(new BUnit1(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(4)){
-                    entities.add(new BUnit2(this, 100, 100, "player"));
+                    entities.add(new BUnit2(this, 100, 400, "player"));
                 } else if(keyH.isNumberKeyJustPressed(5)){
-                    entities.add(new GunMan(this, 1700, 100, "enemy"));
+                    entities.add(new GunMan(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(6)){
-                    entities.add(new MUnit2(this, 1700, 100, "enemy"));
+                    entities.add(new MUnit2(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(7)){
-                    entities.add(new BUnit1(this, 1700, 100, "enemy"));
+                    entities.add(new BUnit1(this, 1700, 400, "enemy"));
                 } else if(keyH.isNumberKeyJustPressed(8)){
-                    entities.add(new BUnit2(this, 1700, 100, "enemy"));
+                    entities.add(new BUnit2(this, 1700, 400, "enemy"));
                 }
                 /*if(keyH.upPressed){
                     entities.add(new MUnit2(this, 100, 100, "player"));

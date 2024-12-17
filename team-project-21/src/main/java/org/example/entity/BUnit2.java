@@ -70,7 +70,7 @@ public class BUnit2 extends LivingEntity{
                 if(ticks<5){
                     sprite = attackSprites[ticks];
                     if(ticks == 1)
-                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x+target.xSpeed-this.x-this.xSpeed)), 80));
+                    gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x+(target.xSpeed*80)-this.x - 50)), 80));
                 }else{
                     sprite = attackSprites[0];
                 }
