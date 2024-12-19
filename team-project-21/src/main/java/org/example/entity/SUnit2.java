@@ -25,9 +25,9 @@ public class SUnit2 extends LivingEntity{
         attackSprites[3] = getImage("/textures/entities/shield_man/shield_man_attack3.png");
     }
 
-    public void update(){
+    public void tickLiving(){
         prevState = state;
-        super.update();
+        super.tickLiving();
         if(state == 2&&prevState!=2)
             attackTicks = tickCount;
         switch (state) {
@@ -53,6 +53,11 @@ public class SUnit2 extends LivingEntity{
                 }
             }
         }
+    }
+    public void tickDeath(){
+        if(deathTicks == 0)
+            gp.playSound("/sounds/sf/man_death" + (random.nextInt(3) + 1) +".wav");
+        super.tickDeath();
     }
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(gp.tileSize), getHeight()*gp.tileSize, getHeight()*gp.tileSize);

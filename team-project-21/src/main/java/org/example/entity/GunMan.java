@@ -22,9 +22,9 @@ public class GunMan extends LivingEntity{
         attackSprites[1] = getImage("/textures/entities/gun_man/gun_man_attack2.png");
     }
 
-    public void update(){
+    public void tickLiving(){
         prevState = state;
-        super.update();
+        super.tickLiving();
         if(state == 2&&prevState!=2)
             attackTicks = tickCount;
         switch (state) {
@@ -47,6 +47,11 @@ public class GunMan extends LivingEntity{
                 }
             }
         }
+    }
+    public void tickDeath(){
+        if(deathTicks == 0)
+            gp.playSound("/sounds/sf/man_death" + (random.nextInt(3) + 1) +".wav");
+        super.tickDeath();
     }
     public HitBox createDetectRange() {
         return new HitBox(x, y, z, (int)(17*gp.tileSize), getHeight()*gp.tileSize, getHeight()*gp.tileSize);

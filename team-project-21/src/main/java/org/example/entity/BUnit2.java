@@ -86,7 +86,7 @@ public class BUnit2 extends LivingEntity{
                     sprite = attackSprites[ticks];
                     if(ticks == 1){
                         gp.playSound("/sounds/sf/cannon_shoot.wav");
-                        gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize * 0.66), z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                        gp.addFreshEntityP(new ArchBullet(gp, x, y - (int)(getHeight() * gp.tileSize * 0.66), z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x - 48)), 80));
                     }
                 }else{
                     sprite = attackSprites[0];
@@ -130,6 +130,8 @@ public class BUnit2 extends LivingEntity{
     }
     public void tickDeath(){
         sprite = dyingSprites[Math.max(0,(deathTicks-1)/2)];
+        if(deathTicks == 0)
+            gp.playSound("/sounds/sf/machine_death" + (random.nextInt(3) + 1) +".wav");
         if(deathTicks > getMaxDeathTicks() - 1){
             setAttackDamage(0);
             gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2){

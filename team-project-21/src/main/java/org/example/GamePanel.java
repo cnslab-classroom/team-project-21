@@ -42,7 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     // 최대 동시에 재생할 수 있는 음향 효과 개수
-    private static final int MAX_SOUNDS = 30;
+    private static final int MAX_SOUNDS = 20;
 
     // 소리 재생 큐
     private final Queue<String> soundQueue = new LinkedList<>();

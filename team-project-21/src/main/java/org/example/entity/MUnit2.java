@@ -34,6 +34,8 @@ public class MUnit2 extends LivingEntity {
         return 1.5f;
     }
     public void tickDeath(){
+        if(deathTicks == 0)
+            gp.playSound("/sounds/sf/machine_death" + (random.nextInt(3) + 1) +".wav");
         if(deathTicks > getMaxDeathTicks() - 2){
             setAttackDamage(0);
             gp.addFreshEntityP(new ArchBullet(gp, x, y, z - 1, this, 0, 2));

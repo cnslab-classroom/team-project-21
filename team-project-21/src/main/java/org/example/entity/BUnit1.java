@@ -73,7 +73,7 @@ public class BUnit1 extends LivingEntity {
                     if(ticks == 16){
                         gp.playSound("/sounds/sf/cannon_shoot.wav");
                         int err = "right".equals(direction) ? 30 : -30;
-                        gp.addFreshEntityP(new ArchBullet(gp, x + err, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x+target.xSpeed*80 - 48)), 80));
+                        gp.addFreshEntityP(new ArchBullet(gp, x + err, y - (int)(getHeight() * gp.tileSize)/2, z, this, (int)Math.sqrt((double)3*Math.abs(target.x-this.x - 48)), 80));
                     }
                 }else{
                     sprite = moveSprites[0];
@@ -82,6 +82,8 @@ public class BUnit1 extends LivingEntity {
         }
     }
     public void tickDeath(){
+        if(deathTicks == 0)
+            gp.playSound("/sounds/sf/machine_death" + (random.nextInt(3) + 1) +".wav");
         sprite = dyingSprites[Math.max(0,(deathTicks-1)/2)];
         if(deathTicks > getMaxDeathTicks() - 1){
             setAttackDamage(0);
